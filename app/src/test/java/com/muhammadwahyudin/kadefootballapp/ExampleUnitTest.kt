@@ -1,4 +1,4 @@
-package com.muhammadwahyudin.kadefootballleague
+package com.muhammadwahyudin.kadefootballapp
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

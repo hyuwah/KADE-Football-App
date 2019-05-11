@@ -1,4 +1,4 @@
-package com.muhammadwahyudin.kadefootballleague
+package com.muhammadwahyudin.kadefootballapp
 
 import android.graphics.Color
 import android.view.Gravity
@@ -10,11 +10,6 @@ import org.jetbrains.anko.cardview.v7.cardView
 
 class LeagueItemUI : AnkoComponent<ViewGroup> {
 
-    companion object {
-        const val image = 1
-        const val name = 2
-    }
-
     override fun createView(ui: AnkoContext<ViewGroup>): View = with(ui) {
         cardView {
             radius = dip(8).toFloat()
@@ -24,14 +19,14 @@ class LeagueItemUI : AnkoComponent<ViewGroup> {
             verticalLayout {
                 lparams(matchParent, matchParent)
                 imageView {
-                    id = image
+                    id = R.id.league_item_image
                     adjustViewBounds = true
                     scaleType = ImageView.ScaleType.CENTER_CROP
                 }.lparams(width = matchParent)
 
                 textView("League Name") {
                     padding = dip(8)
-                    id = name
+                    id = R.id.league_item_name
                     textAppearance = R.style.TextAppearance_MaterialComponents_Subtitle1
                     textColor = Color.BLACK
                     gravity = Gravity.CENTER

@@ -1,4 +1,4 @@
-package com.muhammadwahyudin.kadefootballleague
+package com.muhammadwahyudin.kadefootballapp
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

@@ -1,4 +1,4 @@
-package com.muhammadwahyudin.kadefootballleague
+package com.muhammadwahyudin.kadefootballapp
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

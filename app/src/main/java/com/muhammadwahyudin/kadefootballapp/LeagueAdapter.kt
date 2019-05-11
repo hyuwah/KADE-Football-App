@@ -1,4 +1,4 @@
-package com.muhammadwahyudin.kadefootballleague
+package com.muhammadwahyudin.kadefootballapp
 
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +29,8 @@ class LeagueAdapter(private val leagues: List<LeagueModel>, val clickListener: (
     override fun getItemCount(): Int = leagues.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val image: ImageView = view.find(LeagueItemUI.image)
-        val name: TextView = view.find(LeagueItemUI.name)
+        val image: ImageView = view.find(R.id.league_item_image)
+        val name: TextView = view.find(R.id.league_item_name)
         fun bindLeague(league: LeagueModel) {
             name.text = league.name
             image.setImageResource(league.image)

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KADE Football League</string>
+    <string name="app_name">KADE Football App</string>
 
     <string-array name="league_name">
         <item>English Premier League</item>
