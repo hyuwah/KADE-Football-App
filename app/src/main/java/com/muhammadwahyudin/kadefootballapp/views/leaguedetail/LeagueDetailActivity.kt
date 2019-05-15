@@ -1,12 +1,15 @@
 package com.muhammadwahyudin.kadefootballapp.views.leaguedetail
 
 import android.os.Bundle
-import android.view.Gravity
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.model.League
-import org.jetbrains.anko.*
+import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_league_detail.*
 
 class LeagueDetailActivity : AppCompatActivity() {
 
@@ -14,42 +17,35 @@ class LeagueDetailActivity : AppCompatActivity() {
         const val LEAGUE_PARCEL = "league_parcel"
     }
 
+    private lateinit var mViewModel: LeagueDetailViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_league_detail)
+
+        setSupportActionBar(toolbar)
 
         val leagueModel = intent.getParcelableExtra<League>(LEAGUE_PARCEL)
-        title = leagueModel.name
+        ct_layout.title = leagueModel.name
+        ct_layout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.white))
+        ct_layout.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
 
-        scrollView {
-            isFillViewport = true
-            lparams(matchParent, matchParent)
-            verticalLayout {
-                lparams(matchParent, wrapContent)
-                imageView {
-                    adjustViewBounds = true
-                    scaleType = ImageView.ScaleType.FIT_CENTER
-                    setImageResource(leagueModel.logoRes)
-                }.lparams(width = matchParent, height = dip(200)) {
-                    bottomMargin = dip(12)
-                }
 
-                textView(leagueModel.name) {
-                    textAppearance =
-                        R.style.TextAppearance_MaterialComponents_Headline5
-                    gravity = Gravity.CENTER
-                }.lparams(width = matchParent) {
-                    topMargin = dip(12)
-                    leftMargin = dip(12)
-                    rightMargin = dip(12)
-                }
+        mViewModel = ViewModelProviders.of(this).get(LeagueDetailViewModel::class.java)
+        mViewModel.getLeagueDetail(leagueModel.id).observe(this,
+            Observer<LeagueDetailRes.League> { league ->
+                Picasso.get().load(league?.strFanart1).into(iv_league_detail_banner)
+                Picasso.get().load(league?.strBadge).into(civ_league_detail)
+                tv_title_league.text = league?.strLeagueAlternate
+                // reinit viewpager + fragment
+            })
 
-                textView(leagueModel.desc) {
-                    textAppearance =
-                        R.style.TextAppearance_MaterialComponents_Body1
-                }.lparams(width = matchParent) {
-                    margin = dip(16)
-                }
-            }
-        }
+
+        val vpAdapter = ViewPagerAdapter(supportFragmentManager)
+        // Add fragment kosong
+        vpAdapter.addFragment(PreviousMatchFragment(), "Previous Match")
+        vpAdapter.addFragment(NextMatchFragment("Custom Text"), "Next Match")
+        viewpager.adapter = vpAdapter
+        tablayout.setupWithViewPager(viewpager)
     }
 }

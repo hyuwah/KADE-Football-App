@@ -6,10 +6,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.muhammadwahyudin.kadefootballapp.data.Repository
 import com.muhammadwahyudin.kadefootballapp.data.remote.TheSportDbApiService
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.LeagueDetailActivity
-import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.verticalLayout
 
 class LeaguesActivity : AppCompatActivity() {
 
@@ -23,6 +21,8 @@ class LeaguesActivity : AppCompatActivity() {
 
         verticalLayout {
             recyclerView {
+                padding = dip(8)
+                lparams(matchParent, matchParent)
                 adapter = LeagueAdapter(leagues) { leagueModel ->
                     startActivity(
                         intentFor<LeagueDetailActivity>(
