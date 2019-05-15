@@ -2,7 +2,7 @@ package com.muhammadwahyudin.kadefootballapp.data.remote
 
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeaguesRes
-import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,13 +14,13 @@ interface TheSportDbApiService {
     // League Endpoint, strSport == soccer
     // https://www.thesportsdb.com/api/v1/json/1/all_leagues.php
     @GET("/api/v1/json/1/all_leagues.php")
-    fun getLeagues(): Observable<LeaguesRes>
+    fun getLeagues(): Single<LeaguesRes>
 
     // League detail endpoint {leagueId}
     // https://www.thesportsdb.com/api/v1/json/1/lookupleague.php?id=4346
     // add /preview for thumbnail image
     @GET("/api/v1/json/1/lookupleague.php")
-    fun getLeagueDetail(@Query("id") leagueId: Int): Observable<LeagueDetailRes>
+    fun getLeagueDetail(@Query("id") leagueId: Int): Single<LeagueDetailRes>
 
     // Match in League Endpoint {leagueId}
     // Next 15 https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4328

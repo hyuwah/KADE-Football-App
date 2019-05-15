@@ -1,10 +1,11 @@
-package com.muhammadwahyudin.kadefootballapp
+package com.muhammadwahyudin.kadefootballapp.views.leagues
 
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.muhammadwahyudin.kadefootballapp.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 
@@ -27,7 +28,8 @@ class LeagueItemUI : AnkoComponent<ViewGroup> {
                 textView("League Name") {
                     padding = dip(8)
                     id = R.id.league_item_name
-                    textAppearance = R.style.TextAppearance_MaterialComponents_Subtitle1
+                    textAppearance =
+                        R.style.TextAppearance_MaterialComponents_Subtitle1
                     textColor = Color.BLACK
                     gravity = Gravity.CENTER
                 }.lparams(

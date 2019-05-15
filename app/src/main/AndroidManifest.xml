@@ -11,10 +11,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="com.muhammadwahyudin.kadefootballapp.LeagueDetailActivity"
-                  android:parentActivityName="com.muhammadwahyudin.kadefootballapp.LeaguesActivity">
+        <activity android:name="com.muhammadwahyudin.kadefootballapp.views.leaguedetail.LeagueDetailActivity"
+                  android:parentActivityName="com.muhammadwahyudin.kadefootballapp.views.leagues.LeaguesActivity">
         </activity>
-        <activity android:name="com.muhammadwahyudin.kadefootballapp.LeaguesActivity">
+        <activity android:name="com.muhammadwahyudin.kadefootballapp.views.leagues.LeaguesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>

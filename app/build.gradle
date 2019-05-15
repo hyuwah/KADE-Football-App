@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -11,6 +12,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "BASE_URL", "\"https://www.thesportsdb.com/\""
+        buildConfigField "String", "TSDB_API_KEY", "\"1\""
     }
     buildTypes {
         release {
@@ -26,6 +30,7 @@ androidExtensions{
 
 ext.anko_version='0.10.8'
 ext.retrofit_version='2.5.0'
+ext.lifecycle_version = "2.2.0-alpha01"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -48,6 +53,10 @@ dependencies {
 
     // RX
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1' // RXAndroid contains RxJava dependencies, apa mesti explicitly tambah juga ato cukup pake bawaan rxandroid?
+
+    // Viewmodel
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.code.gson:gson:2.8.5'
