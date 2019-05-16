@@ -13,8 +13,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
+                app:expandedTitleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:expandedTitleGravity="center_horizontal|bottom"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -61,6 +61,18 @@
                         app:layout_constraintEnd_toEndOf="parent"
                 />
 
+                <TextView
+                        android:id="@+id/tv_country"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        android:textAlignment="center"
+                        app:layout_constraintTop_toBottomOf="@id/tv_title_league"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.Toolbar
@@ -90,7 +102,6 @@
                     android:layout_height="wrap_content"/>
             <androidx.viewpager.widget.ViewPager
                     android:id="@+id/viewpager"
-                    android:layout_below="@id/tablayout"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">

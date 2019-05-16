@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.model.League
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
+import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.lastmatch.LastMatchFragment
+import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.nextmatch.NextMatchFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_league_detail.*
 
@@ -30,22 +32,32 @@ class LeagueDetailActivity : AppCompatActivity() {
         ct_layout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.white))
         ct_layout.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
 
-
         mViewModel = ViewModelProviders.of(this).get(LeagueDetailViewModel::class.java)
         mViewModel.getLeagueDetail(leagueModel.id).observe(this,
             Observer<LeagueDetailRes.League> { league ->
-                Picasso.get().load(league?.strFanart1).into(iv_league_detail_banner)
+                Picasso.get().load(league?.strFanart4).into(iv_league_detail_banner)
                 Picasso.get().load(league?.strBadge).into(civ_league_detail)
                 tv_title_league.text = league?.strLeagueAlternate
-                // reinit viewpager + fragment
+                tv_country.text = league?.strCountry
+                initViewPagerFragment(league?.idLeague)
             })
 
-
-        val vpAdapter = ViewPagerAdapter(supportFragmentManager)
-        // Add fragment kosong
-        vpAdapter.addFragment(PreviousMatchFragment(), "Previous Match")
-        vpAdapter.addFragment(NextMatchFragment("Custom Text"), "Next Match")
-        viewpager.adapter = vpAdapter
         tablayout.setupWithViewPager(viewpager)
+        initViewPagerFragment(null)
+    }
+
+    private fun initViewPagerFragment(leagueId: String?) {
+        val vpAdapter = ViewPagerAdapter(supportFragmentManager)
+        vpAdapter.addFragment(
+            LastMatchFragment(
+                leagueId
+            ), "Previous Match"
+        )
+        vpAdapter.addFragment(
+            NextMatchFragment(
+                leagueId
+            ), "Next Match"
+        )
+        viewpager.adapter = vpAdapter
     }
 }

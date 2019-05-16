@@ -1,5 +1,7 @@
 package com.muhammadwahyudin.kadefootballapp.views.leagues
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,7 +14,8 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
 class LeaguesActivity : AppCompatActivity() {
 
     // Should be injected / or use viewmodel, tapi pengecualian
-    val repository = Repository(TheSportDbApiService.create())
+    // TODO ambil dari DI / Kodein
+    private val repository = Repository(TheSportDbApiService.create())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +23,7 @@ class LeaguesActivity : AppCompatActivity() {
         val leagues = repository.getLeagues(this)
 
         verticalLayout {
+            background = ColorDrawable(Color.parseColor("#efefef"))
             recyclerView {
                 padding = dip(8)
                 lparams(matchParent, matchParent)
