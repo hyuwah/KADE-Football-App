@@ -45,7 +45,13 @@ class NextMatchFragment : Fragment() {
         tv_empty_view.invisible()
         // Prepare recyclerview & adapter
         adapter = MatchesScheduleAdapter(listOf()) { event ->
-            startActivity(intentFor<MatchDetailActivity>(MatchDetailActivity.MATCH_PARCEL to event))
+            startActivity(
+                intentFor<MatchDetailActivity>(
+                    MatchDetailActivity.MATCH_PARCEL to event,
+                    MatchDetailActivity.HOME_BADGE to event.strHomeTeamBadge,
+                    MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
+                )
+            )
             toast(event.idEvent)
         }
         rv_next_match.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -61,7 +67,13 @@ class NextMatchFragment : Fragment() {
                 if (events.isNotEmpty()) {
                     // update adapter
                     adapter = MatchesScheduleAdapter(events) { event ->
-                        startActivity(intentFor<MatchDetailActivity>(MatchDetailActivity.MATCH_PARCEL to event))
+                        startActivity(
+                            intentFor<MatchDetailActivity>(
+                                MatchDetailActivity.MATCH_PARCEL to event,
+                                MatchDetailActivity.HOME_BADGE to event.strHomeTeamBadge,
+                                MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
+                            )
+                        )
                         toast(event.idEvent)
                     }
                     rv_next_match.adapter = adapter
