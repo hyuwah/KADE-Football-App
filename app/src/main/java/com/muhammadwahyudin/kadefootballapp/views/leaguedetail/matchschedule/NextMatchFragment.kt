@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -17,10 +18,18 @@ import kotlinx.android.synthetic.main.next_match_fragment.*
 import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.toast
 
-class NextMatchFragment(var leagueId: String? = null) : Fragment() {
+class NextMatchFragment : Fragment() {
 
     private lateinit var viewModel: MatchScheduleViewModel
     lateinit var adapter: MatchesScheduleAdapter
+    private var mLeagueId: String? = null
+
+    companion object {
+        private const val LEAGUE_ID = "league_id"
+        fun newInstance(leagueId: String? = null) = NextMatchFragment().apply {
+            arguments = bundleOf(LEAGUE_ID to leagueId)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +40,7 @@ class NextMatchFragment(var leagueId: String? = null) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mLeagueId = arguments?.getString(LEAGUE_ID)
         progressbar_next_match.visible()
         tv_empty_view.invisible()
         // Prepare recyclerview & adapter
@@ -45,7 +55,7 @@ class NextMatchFragment(var leagueId: String? = null) : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MatchScheduleViewModel::class.java)
-        leagueId?.let {
+        mLeagueId?.let {
             viewModel.getNextEvents(it).observe(this, Observer { events ->
                 progressbar_next_match.invisible()
                 if (events.isNotEmpty()) {

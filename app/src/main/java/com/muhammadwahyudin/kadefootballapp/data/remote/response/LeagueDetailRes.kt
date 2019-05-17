@@ -1,8 +1,12 @@
 package com.muhammadwahyudin.kadefootballapp.data.remote.response
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 data class LeagueDetailRes(
     val leagues: List<League>
 ) {
+    @Parcelize
     data class League(
         val dateFirstEvent: String,
         val idCup: String,
@@ -13,21 +17,21 @@ data class LeagueDetailRes(
         val strBanner: String,
         val strComplete: String,
         val strCountry: String,
-        val strDescriptionCN: Any,
-        val strDescriptionDE: Any,
+        val strDescriptionCN: String?,
+        val strDescriptionDE: String?,
         val strDescriptionEN: String,
-        val strDescriptionES: Any,
+        val strDescriptionES: String?,
         val strDescriptionFR: String,
-        val strDescriptionHU: Any,
-        val strDescriptionIL: Any,
-        val strDescriptionIT: Any,
-        val strDescriptionJP: Any,
-        val strDescriptionNL: Any,
-        val strDescriptionNO: Any,
-        val strDescriptionPL: Any,
-        val strDescriptionPT: Any,
-        val strDescriptionRU: Any,
-        val strDescriptionSE: Any,
+        val strDescriptionHU: String?,
+        val strDescriptionIL: String?,
+        val strDescriptionIT: String?,
+        val strDescriptionJP: String?,
+        val strDescriptionNL: String?,
+        val strDescriptionNO: String?,
+        val strDescriptionPL: String?,
+        val strDescriptionPT: String?,
+        val strDescriptionRU: String?,
+        val strDescriptionSE: String?,
         val strDivision: String,
         val strFacebook: String,
         val strFanart1: String,
@@ -47,5 +51,5 @@ data class LeagueDetailRes(
         val strTwitter: String,
         val strWebsite: String,
         val strYoutube: String
-    )
+    ) : Parcelable
 }

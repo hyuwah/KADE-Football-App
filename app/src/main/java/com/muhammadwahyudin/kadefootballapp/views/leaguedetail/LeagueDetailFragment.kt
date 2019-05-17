@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.app.gone
@@ -22,7 +23,16 @@ private const val LEAGUE_DETAIL = "league_detail"
  * A simple [Fragment] subclass.
  *
  */
-class LeagueDetailFragment(var league: LeagueDetailRes.League?) : Fragment() {
+class LeagueDetailFragment : Fragment() {
+
+    private var league: LeagueDetailRes.League? = null
+
+    companion object {
+        private const val LEAGUE = "league_arg"
+        fun newInstance(league: LeagueDetailRes.League?) = LeagueDetailFragment().apply {
+            arguments = bundleOf(LEAGUE to league)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +44,7 @@ class LeagueDetailFragment(var league: LeagueDetailRes.League?) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        league = arguments?.get(LEAGUE) as LeagueDetailRes.League?
         league?.let {
             view.childrenRecursiveSequence().forEach { view ->
                 view.visible()

@@ -49,15 +49,15 @@ class LeagueDetailActivity : AppCompatActivity() {
     private fun initViewPagerFragment(league: LeagueDetailRes.League?) {
         val vpAdapter = ViewPagerAdapter(supportFragmentManager).apply {
             addFragment(
-                LeagueDetailFragment(league),
+                LeagueDetailFragment.newInstance(league),
                 "Info"
             )
             addFragment(
-                LastMatchFragment(league?.idLeague),
+                LastMatchFragment.newInstance(league?.idLeague),
                 "Last Match"
             )
             addFragment(
-                NextMatchFragment(league?.idLeague),
+                NextMatchFragment.newInstance(league?.idLeague),
                 "Next Match"
             )
         }
