@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">KADE Football App</string>
+    <string name="no_upcoming_matches">No upcoming matches</string>
+    <string name="no_past_matches">No past matches</string>
 
     <string-array name="league_name">
         <item>English Premier League</item>
@@ -266,5 +268,8 @@
             Championship, Football League One and Football League Two games are shown on beIN Sport."
         </item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

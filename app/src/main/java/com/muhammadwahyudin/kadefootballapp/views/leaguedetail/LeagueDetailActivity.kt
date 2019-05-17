@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.model.League
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
-import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.lastmatch.LastMatchFragment
-import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.nextmatch.NextMatchFragment
+import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.LastMatchFragment
+import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.NextMatchFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_league_detail.*
 
@@ -35,29 +35,32 @@ class LeagueDetailActivity : AppCompatActivity() {
         mViewModel = ViewModelProviders.of(this).get(LeagueDetailViewModel::class.java)
         mViewModel.getLeagueDetail(leagueModel.id).observe(this,
             Observer<LeagueDetailRes.League> { league ->
-                Picasso.get().load(league?.strFanart4).into(iv_league_detail_banner)
+                Picasso.get().load(league?.strFanart1).into(iv_league_detail_banner)
                 Picasso.get().load(league?.strBadge).into(civ_league_detail)
                 tv_title_league.text = league?.strLeagueAlternate
                 tv_country.text = league?.strCountry
-                initViewPagerFragment(league?.idLeague)
+                initViewPagerFragment(league)
             })
 
         tablayout.setupWithViewPager(viewpager)
         initViewPagerFragment(null)
     }
 
-    private fun initViewPagerFragment(leagueId: String?) {
-        val vpAdapter = ViewPagerAdapter(supportFragmentManager)
-        vpAdapter.addFragment(
-            LastMatchFragment(
-                leagueId
-            ), "Previous Match"
-        )
-        vpAdapter.addFragment(
-            NextMatchFragment(
-                leagueId
-            ), "Next Match"
-        )
+    private fun initViewPagerFragment(league: LeagueDetailRes.League?) {
+        val vpAdapter = ViewPagerAdapter(supportFragmentManager).apply {
+            addFragment(
+                LeagueDetailFragment(league),
+                "Info"
+            )
+            addFragment(
+                LastMatchFragment(league?.idLeague),
+                "Last Match"
+            )
+            addFragment(
+                NextMatchFragment(league?.idLeague),
+                "Next Match"
+            )
+        }
         viewpager.adapter = vpAdapter
     }
 }

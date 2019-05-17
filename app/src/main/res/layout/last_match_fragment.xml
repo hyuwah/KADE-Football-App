@@ -5,7 +5,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#efefef"
-        tools:context=".views.leaguedetail.lastmatch.LastMatchFragment">
+        tools:context=".views.leaguedetail.matchschedule.LastMatchFragment">
+
+    <TextView
+            android:text="@string/no_past_matches"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/tv_empty_view" android:textAlignment="center"
+            android:layout_gravity="center" android:visibility="invisible"/>
 
     <ProgressBar
             android:layout_gravity="center"

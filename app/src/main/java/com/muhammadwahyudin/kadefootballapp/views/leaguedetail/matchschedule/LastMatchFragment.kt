@@ -1,4 +1,4 @@
-package com.muhammadwahyudin.kadefootballapp.views.leaguedetail.lastmatch
+package com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,28 +12,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.app.invisible
 import com.muhammadwahyudin.kadefootballapp.app.visible
-import kotlinx.android.synthetic.main.previous_match_fragment.*
+import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailActivity
+import kotlinx.android.synthetic.main.last_match_fragment.*
+import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.toast
 
 class LastMatchFragment(var leagueId: String? = null) : Fragment() {
 
-    private lateinit var viewModel: LastMatchViewModel
-    lateinit var adapter: LastMatchAdapter
+    private lateinit var scheduleViewModel: MatchScheduleViewModel
+    lateinit var adapter: MatchesScheduleAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.previous_match_fragment, container, false)
+        return inflater.inflate(R.layout.last_match_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         progressbar_last_match.visible()
-
+        tv_empty_view.invisible()
         // Prepare recyclerview & adapter
-        adapter = LastMatchAdapter(listOf()) { event ->
+        adapter = MatchesScheduleAdapter(listOf()) { event ->
+            startActivity(intentFor<MatchDetailActivity>(MatchDetailActivity.MATCH_PARCEL to event))
             toast(event.idEvent)
         }
         rv_last_match.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -42,18 +44,20 @@ class LastMatchFragment(var leagueId: String? = null) : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(LastMatchViewModel::class.java)
+        scheduleViewModel = ViewModelProviders.of(this).get(MatchScheduleViewModel::class.java)
         leagueId?.let {
-            viewModel.getEvents(it).observe(this, Observer { events ->
+            scheduleViewModel.getLastEvents(it).observe(this, Observer { events ->
                 progressbar_last_match.invisible()
                 if (events.isNotEmpty()) {
                     // update adapter
-                    adapter = LastMatchAdapter(events) { event ->
+                    adapter = MatchesScheduleAdapter(events) { event ->
+                        startActivity(intentFor<MatchDetailActivity>(MatchDetailActivity.MATCH_PARCEL to event))
                         toast(event.idEvent)
                     }
                     rv_last_match.adapter = adapter
                 } else {
                     // show empty view
+                    tv_empty_view.invisible()
                 }
             })
         }

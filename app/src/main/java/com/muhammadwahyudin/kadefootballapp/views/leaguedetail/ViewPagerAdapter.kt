@@ -4,6 +4,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
+/**
+ * Match Schedule's View Pager Adapter
+ */
 class ViewPagerAdapter(supportFragmentManager: FragmentManager) : FragmentStatePagerAdapter(supportFragmentManager) {
     private val mFragmentList = arrayListOf<Fragment>()
     private val mFragmentTitleList = arrayListOf<String>()

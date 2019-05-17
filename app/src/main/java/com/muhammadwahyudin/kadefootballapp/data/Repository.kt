@@ -7,6 +7,7 @@ import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
 import com.muhammadwahyudin.kadefootballapp.data.model.League
 import com.muhammadwahyudin.kadefootballapp.data.model.Team
 import com.muhammadwahyudin.kadefootballapp.data.remote.TheSportDbApiService
+import com.muhammadwahyudin.kadefootballapp.data.remote.response.EventsRes
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.TeamsRes
 import io.reactivex.Single
@@ -47,36 +48,11 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
     fun getNextMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>> {
         val tempdata = arrayListOf<EventWithImage>()
         val data = MutableLiveData<List<EventWithImage>>()
-        theSportDbApiService.getNextMatchbyLeagueId(leagueId).subscribeOn(Schedulers.io())
+        theSportDbApiService.getNextMatchByLeagueId(leagueId).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess {
-                // Kumpulin Team Badge home & away
-                if (!it.events.isNullOrEmpty()) {
-                    it.events.forEach { event ->
-                        Single.zip(
-                            theSportDbApiService.getTeamDetail(event.idAwayTeam),
-                            theSportDbApiService.getTeamDetail(event.idHomeTeam),
-                            BiFunction<TeamsRes, TeamsRes, List<String>> { awayRes, homeRes ->
-                                val pair = arrayListOf<String>()
-                                pair.add(awayRes.teams[0].strTeamBadge)
-                                pair.add(homeRes.teams[0].strTeamBadge)
-                                pair.toList()
-                            }
-                        ).subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSuccess { teamBadge ->
-                                event.strAwayTeamBadge = teamBadge[0]
-                                event.strHomeTeamBadge = teamBadge[1]
-                                tempdata.add(event)
-                                data.postValue(tempdata.toList())
-                            }.doOnError {
-                                tempdata.add(event)
-                                data.postValue(tempdata.toList())
-                            }.subscribe()
-                    }
-                } else {
-                    data.postValue(listOf())
-                }
+                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempdata, data)
+                else data.postValue(listOf())
             }.doOnError {
                 data.postValue(listOf())
             }.subscribe()
@@ -86,37 +62,39 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
     fun getLastMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>> {
         val tempdata = arrayListOf<EventWithImage>()
         val data = MutableLiveData<List<EventWithImage>>()
-        theSportDbApiService.getLastMatchbyLeagueId(leagueId).subscribeOn(Schedulers.io())
+        theSportDbApiService.getLastMatchByLeagueId(leagueId).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess {
-                // Kumpulin Team Badge home & away
-                if (!it.events.isNullOrEmpty()) {
-                    it.events.forEach { event ->
-                        // https://medium.com/mindorks/how-to-make-complex-requests-simple-with-rxjava-in-kotlin-ccec004c5d10
-                        Single.zip(
-                            theSportDbApiService.getTeamDetail(event.idAwayTeam),
-                            theSportDbApiService.getTeamDetail(event.idHomeTeam),
-                            BiFunction<TeamsRes, TeamsRes, List<String>> { awayRes, homeRes ->
-                                val pair = arrayListOf<String>()
-                                pair.add(awayRes.teams[0].strTeamBadge)
-                                pair.add(homeRes.teams[0].strTeamBadge)
-                                pair.toList()
-                            }
-                        ).subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSuccess { teamBadge ->
-                                event.strAwayTeamBadge = teamBadge[0]
-                                event.strHomeTeamBadge = teamBadge[1]
-                                tempdata.add(event)
-                                data.postValue(tempdata.toList())
-                            }.doOnError {
-                                tempdata.add(event)
-                                data.postValue(tempdata.toList())
-                            }.subscribe()
-                    }
-                } else {
-                    data.postValue(listOf())
-                }
+                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempdata, data)
+                else data.postValue(listOf())
+            }.doOnError {
+                data.postValue(listOf())
+            }.subscribe()
+        return data
+    }
+
+    fun searchMatches(query: String): MutableLiveData<List<EventWithImage>> {
+        val tempdata = arrayListOf<EventWithImage>()
+        val data = MutableLiveData<List<EventWithImage>>()
+        theSportDbApiService.searchMatches(query).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess {
+                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempdata, data)
+                else data.postValue(listOf())
+            }.doOnError {
+                data.postValue(listOf())
+            }.subscribe()
+        return data
+    }
+
+    fun getMatchDetail(eventId: String): MutableLiveData<List<EventWithImage>> {
+        val tempdata = arrayListOf<EventWithImage>()
+        val data = MutableLiveData<List<EventWithImage>>()
+        theSportDbApiService.getMatchDetailByEventId(eventId).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess {
+                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempdata, data)
+                else data.postValue(listOf())
             }.doOnError {
                 data.postValue(listOf())
             }.subscribe()
@@ -133,5 +111,37 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
                 data.postValue(null)
             }.subscribe()
         return data
+    }
+
+    private fun updateEventsWithTeamBadge(
+        it: EventsRes,
+        tempdata: ArrayList<EventWithImage>,
+        data: MutableLiveData<List<EventWithImage>>
+    ) {
+        // Kumpulin Team Badge home & away
+        it.events.forEach { event ->
+            // https://medium.com/mindorks/how-to-make-complex-requests-simple-with-rxjava-in-kotlin-ccec004c5d10
+            Single.zip(
+                theSportDbApiService.getTeamDetail(event.idAwayTeam),
+                theSportDbApiService.getTeamDetail(event.idHomeTeam),
+                BiFunction<TeamsRes, TeamsRes, List<String>> { awayRes, homeRes ->
+                    val teamBadges = arrayListOf<String>()
+                    teamBadges.add(awayRes.teams[0].strTeamBadge)
+                    teamBadges.add(homeRes.teams[0].strTeamBadge)
+                    teamBadges.toList()
+                }
+            ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess { teamBadges ->
+                    // insert team badges ke masing-masing team di event
+                    event.strAwayTeamBadge = teamBadges[0]
+                    event.strHomeTeamBadge = teamBadges[1]
+                    tempdata.add(event)
+                    data.postValue(tempdata.toList())
+                }.doOnError {
+                    tempdata.add(event)
+                    data.postValue(tempdata.toList())
+                }.subscribe()
+        }
     }
 }

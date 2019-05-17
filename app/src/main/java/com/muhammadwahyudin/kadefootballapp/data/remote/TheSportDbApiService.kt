@@ -21,25 +21,27 @@ interface TheSportDbApiService {
 
     // League detail endpoint {leagueId}
     // https://www.thesportsdb.com/api/v1/json/1/lookupleague.php?id=4346
-    // add /preview for thumbnail image
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/lookupleague.php")
     fun getLeagueDetail(@Query("id") leagueId: Int): Single<LeagueDetailRes>
 
     // Match in League Endpoint {leagueId}
     // Next 15 https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4328
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/eventsnextleague.php")
-    fun getNextMatchbyLeagueId(@Query("id") leagueId: String): Single<EventsRes>
+    fun getNextMatchByLeagueId(@Query("id") leagueId: String): Single<EventsRes>
     // Last 15 https://www.thesportsdb.com/api/v1/json/1/eventspastleague.php?id=4328
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/eventspastleague.php")
-    fun getLastMatchbyLeagueId(@Query("id") leagueId: String): Single<EventsRes>
+    fun getLastMatchByLeagueId(@Query("id") leagueId: String): Single<EventsRes>
 
     // Detail Match endpoint {eventId}
     // https://www.thesportsdb.com/api/v1/json/1/lookupevent.php?id=441613
+    // Kontennya kok sama kaya next15 / last15 ??
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/lookupevent.php")
     fun getMatchDetailByEventId(@Query("id") eventId: String): Single<EventsRes>
 
     // Search match endpoint {stringQuery}
     // https://www.thesportsdb.com/api/v1/json/1/searchevents.php?e=Arsenal_vs_Chelsea
+    @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/searchevents.php")
+    fun searchMatches(@Query("e") query: String): Single<EventsRes>
 
     // Team Detail endpoint {teamId}
     // https://www.thesportsdb.com/api/v1/json/1/lookupteam.php?id=133604
