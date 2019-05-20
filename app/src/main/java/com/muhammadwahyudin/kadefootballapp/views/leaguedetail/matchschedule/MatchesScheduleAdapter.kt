@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.muhammadwahyudin.kadefootballapp.R
+import com.muhammadwahyudin.kadefootballapp.app.toReadableTimeWIB
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.event_match_item.view.*
@@ -29,8 +30,7 @@ class MatchesScheduleAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(event: EventWithImage, clickListener: (EventWithImage) -> Unit) = with(itemView) {
             tv_match_title.text = event.strEvent
-            tv_match_date.text = event.dateEvent // parse to gmt 7
-            tv_match_time.text = event.strTime // parse to gmt 7
+            tv_match_date.text = event.strTime?.toReadableTimeWIB(event.dateEvent!!)
             tv_home_score.text = if (event.intHomeScore.isNullOrEmpty()) "-" else event.intHomeScore
             tv_home_team_name.text = event.strHomeTeam
             tv_away_score.text = if (event.intAwayScore.isNullOrEmpty()) "-" else event.intAwayScore

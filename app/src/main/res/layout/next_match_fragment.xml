@@ -21,6 +21,8 @@
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_next_match"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" tools:listitem="@layout/event_match_item"/>
+            android:layout_height="match_parent"
+            android:layoutAnimation="@anim/layout_list_fall_down"
+            tools:listitem="@layout/event_match_item"/>
 
 </FrameLayout>
