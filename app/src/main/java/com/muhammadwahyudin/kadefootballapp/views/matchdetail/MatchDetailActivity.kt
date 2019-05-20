@@ -1,5 +1,6 @@
 package com.muhammadwahyudin.kadefootballapp.views.matchdetail
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.muhammadwahyudin.kadefootballapp.R
@@ -16,6 +17,7 @@ class MatchDetailActivity : AppCompatActivity() {
         const val AWAY_BADGE = "away_badge"
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match_detail)
@@ -63,11 +65,11 @@ class MatchDetailActivity : AppCompatActivity() {
 
     }
 
-    fun formatContent(string: String?): String {
-        if (string.isNullOrEmpty()) {
-            return "-"
+    private fun formatContent(string: String?): String {
+        return if (string.isNullOrEmpty()) {
+            "-"
         } else {
-            return string.replace(";", "\n").trim()
+            string.replace(";", "\n").trim()
         }
     }
 
