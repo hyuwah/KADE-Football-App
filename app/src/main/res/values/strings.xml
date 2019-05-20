@@ -270,12 +270,22 @@
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="score_separator">:</string>
     <string name="match_details_goals">Goals</string>
     <string name="match_details_shots">Shots</string>
     <string name="match_details_cards">Cards</string>
     <string name="match_details_lineup">Lineup</string>
     <string name="match_details_formation">Formation</string>
+    <string name="formed_year">Formed Year</string>
+    <string name="description">Description</string>
+    <string name="website">Website</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="youtube">Youtube</string>
+    <string name="search">Search</string>
+    <string name="search_match">Search Match</string>
+    <string name="year_founded_title">Year Founded:</string>
+    <string name="search_empty_view_instruction">Type something (min 3 chars)</string>
+    <string name="something_went_wrong">Something went wrong</string>
 
 </resources>

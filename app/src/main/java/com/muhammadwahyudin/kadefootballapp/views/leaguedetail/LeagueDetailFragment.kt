@@ -15,10 +15,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_league_detail.*
 import org.jetbrains.anko.childrenRecursiveSequence
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val LEAGUE_DETAIL = "league_detail"
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -53,7 +49,7 @@ class LeagueDetailFragment : Fragment() {
             Picasso.get().load(it.strBanner).into(iv_banner)
             Picasso.get().load(it.strTrophy).into(iv_trophy)
             tv_league_desc.text = it.strDescriptionEN
-            tv_formed_year.text = "Year Founded: " + it.intFormedYear
+            tv_formed_year.text = getString(R.string.year_founded_title) + it.intFormedYear
             tv_website.text = it.strWebsite
             tv_facebook.text = it.strFacebook
             tv_twitter.text = it.strTwitter

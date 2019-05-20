@@ -1,10 +1,7 @@
 package com.muhammadwahyudin.kadefootballapp.data.remote
 
 import com.muhammadwahyudin.kadefootballapp.BuildConfig
-import com.muhammadwahyudin.kadefootballapp.data.remote.response.EventsRes
-import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
-import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeaguesRes
-import com.muhammadwahyudin.kadefootballapp.data.remote.response.TeamsRes
+import com.muhammadwahyudin.kadefootballapp.data.remote.response.*
 import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -41,7 +38,7 @@ interface TheSportDbApiService {
     // Search match endpoint {stringQuery}
     // https://www.thesportsdb.com/api/v1/json/1/searchevents.php?e=Arsenal_vs_Chelsea
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/searchevents.php")
-    fun searchMatches(@Query("e") query: String): Single<EventsRes>
+    fun searchMatches(@Query("e") query: String): Single<SearchEventsRes>
 
     // Team Detail endpoint {teamId}
     // https://www.thesportsdb.com/api/v1/json/1/lookupteam.php?id=133604

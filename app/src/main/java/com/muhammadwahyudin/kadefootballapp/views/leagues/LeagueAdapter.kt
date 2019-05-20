@@ -31,7 +31,7 @@ class LeagueAdapter(private val leagues: List<League>, val clickListener: (Leagu
     override fun getItemCount(): Int = leagues.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val image: ImageView = view.find(R.id.league_item_image)
+        private val image: ImageView = view.find(R.id.league_item_image)
         val name: TextView = view.find(R.id.league_item_name)
         fun bindLeague(league: League) {
             name.text = league.name

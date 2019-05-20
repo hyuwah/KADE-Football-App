@@ -1,6 +1,8 @@
 package com.muhammadwahyudin.kadefootballapp.views.leaguedetail
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -10,8 +12,10 @@ import com.muhammadwahyudin.kadefootballapp.data.model.League
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.LastMatchFragment
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.NextMatchFragment
+import com.muhammadwahyudin.kadefootballapp.views.matchsearch.MatchSearchActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_league_detail.*
+import org.jetbrains.anko.intentFor
 
 class LeagueDetailActivity : AppCompatActivity() {
 
@@ -20,6 +24,7 @@ class LeagueDetailActivity : AppCompatActivity() {
     }
 
     private lateinit var mViewModel: LeagueDetailViewModel
+    private lateinit var leagueModel: League
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +32,7 @@ class LeagueDetailActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
 
-        val leagueModel = intent.getParcelableExtra<League>(LEAGUE_PARCEL)
+        leagueModel = intent.getParcelableExtra(LEAGUE_PARCEL)
         ct_layout.title = leagueModel.name
         ct_layout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.white))
         ct_layout.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
@@ -62,5 +67,22 @@ class LeagueDetailActivity : AppCompatActivity() {
             )
         }
         viewpager.adapter = vpAdapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.league_detail_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.league_event_search_menu -> {
+                startActivity(intentFor<MatchSearchActivity>())
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 }
