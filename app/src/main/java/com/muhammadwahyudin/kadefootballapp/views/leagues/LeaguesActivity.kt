@@ -33,7 +33,6 @@ class LeaguesActivity : AppCompatActivity() {
                             LeagueDetailActivity.LEAGUE_PARCEL to leagueModel
                         )
                     )
-                    toast("ID ${leagueModel.id}")
                 }
                 layoutManager = GridLayoutManager(context, 2)
             }

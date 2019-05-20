@@ -16,7 +16,6 @@ import com.muhammadwahyudin.kadefootballapp.app.visible
 import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailActivity
 import kotlinx.android.synthetic.main.next_match_fragment.*
 import org.jetbrains.anko.support.v4.intentFor
-import org.jetbrains.anko.support.v4.toast
 
 class NextMatchFragment : Fragment() {
 
@@ -52,7 +51,6 @@ class NextMatchFragment : Fragment() {
                     MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
                 )
             )
-            toast(event.idEvent)
         }
         rv_next_match.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         rv_next_match.adapter = adapter
@@ -74,7 +72,6 @@ class NextMatchFragment : Fragment() {
                                 MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
                             )
                         )
-                        toast(event.idEvent)
                     }
                     rv_next_match.adapter = adapter
                 } else {
