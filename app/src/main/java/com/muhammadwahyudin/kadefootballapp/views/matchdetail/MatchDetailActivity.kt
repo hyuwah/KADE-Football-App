@@ -1,13 +1,25 @@
 package com.muhammadwahyudin.kadefootballapp.views.matchdetail
 
 import android.annotation.SuppressLint
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.app.toReadableTimeWIB
+import com.muhammadwahyudin.kadefootballapp.data.local.database
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
+import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_match_detail.*
+import org.jetbrains.anko.db.classParser
+import org.jetbrains.anko.db.delete
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.select
+import org.jetbrains.anko.design.snackbar
+import org.jetbrains.anko.findOptional
 
 class MatchDetailActivity : AppCompatActivity() {
 
@@ -17,14 +29,21 @@ class MatchDetailActivity : AppCompatActivity() {
         const val AWAY_BADGE = "away_badge"
     }
 
+    var isFavorited = false
+    lateinit var match: EventWithImage
+    lateinit var homeBadge: String
+    lateinit var awayBadge: String
+    var favoriteBtn: MenuItem? = null
+
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match_detail)
 
-        val match = intent.getParcelableExtra<EventWithImage>(MATCH_PARCEL)
-        val homeBadge = intent.getStringExtra(HOME_BADGE)
-        val awayBadge = intent.getStringExtra(AWAY_BADGE)
+        match = intent.getParcelableExtra(MATCH_PARCEL)
+        homeBadge = intent.getStringExtra(HOME_BADGE)
+        awayBadge = intent.getStringExtra(AWAY_BADGE)
 
         title = match.strEvent
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -62,7 +81,6 @@ class MatchDetailActivity : AppCompatActivity() {
 
         tv_home_formation.text = match.strHomeFormation ?: "-"
         tv_away_formation.text = match.strAwayFormation ?: "-"
-
     }
 
     private fun formatContent(string: String?): String {
@@ -76,5 +94,87 @@ class MatchDetailActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.match_detail_menu, menu)
+        favoriteBtn = menu?.findItem(R.id.favorite_action)
+        isFavorited()
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.favorite_action -> {
+                toggleFavoriteAction(item)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun toggleFavoriteAction(item: MenuItem) {
+        isFavorited = !isFavorited
+        if (isFavorited) {
+            item.setIcon(R.drawable.ic_favorite)
+            addToFavorite()
+        } else {
+            item.setIcon(R.drawable.ic_favorite_border)
+            removeFromFavorite()
+            findOptional<View>(android.R.id.content)?.snackbar("Removed from favorite")
+
+        }
+    }
+
+    private fun addToFavorite() {
+        try {
+            database.use {
+                insert(
+                    FavoriteEvent.TABLE_NAME,
+                    FavoriteEvent.EVENT_ID to match.idEvent,
+                    FavoriteEvent.EVENT_DATE to match.strTime?.toReadableTimeWIB(match.dateEvent!!),
+                    FavoriteEvent.EVENT_NAME to match.strEvent,
+                    FavoriteEvent.TEAM_HOME_NAME to match.strHomeTeam,
+                    FavoriteEvent.TEAM_HOME_SCORE to match.intHomeScore,
+                    FavoriteEvent.TEAM_HOME_BADGE_URL to homeBadge,
+                    FavoriteEvent.TEAM_AWAY_NAME to match.strAwayTeam,
+                    FavoriteEvent.TEAM_AWAY_SCORE to match.intAwayScore,
+                    FavoriteEvent.TEAM_AWAY_BADGE_URL to awayBadge
+                )
+            }
+            findOptional<View>(android.R.id.content)?.snackbar("Added to favorite")
+        } catch (e: SQLiteConstraintException) {
+            findOptional<View>(android.R.id.content)?.snackbar(e.localizedMessage)
+        }
+    }
+
+    private fun removeFromFavorite() {
+        try {
+            database.use {
+                delete(
+                    FavoriteEvent.TABLE_NAME,
+                    "(EVENT_ID = {id})",
+                    "id" to match.idEvent
+                )
+            }
+            findOptional<View>(android.R.id.content)?.snackbar("Removed from favorite")
+        } catch (e: SQLiteConstraintException) {
+            findOptional<View>(android.R.id.content)?.snackbar(e.localizedMessage)
+        }
+    }
+
+    private fun isFavorited() {
+        database.use {
+            val result = select(FavoriteEvent.TABLE_NAME)
+                .whereArgs("(EVENT_ID = {id})", "id" to match.idEvent)
+            val favorite = result.parseList(classParser<FavoriteEvent>())
+            if (favorite.isNotEmpty()) {
+                isFavorited = true
+                favoriteBtn?.setIcon(R.drawable.ic_favorite)
+            } else {
+                isFavorited = false
+                favoriteBtn?.setIcon(R.drawable.ic_favorite_border)
+            }
+        }
     }
 }
