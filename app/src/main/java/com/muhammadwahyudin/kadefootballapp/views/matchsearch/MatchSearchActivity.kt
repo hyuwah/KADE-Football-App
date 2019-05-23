@@ -86,7 +86,7 @@ class MatchSearchActivity : AppCompatActivity() {
                         progressbar_match_search.invisible()
                         events?.let {
                             if (it.isNullOrEmpty()) {
-                                tv_empty_match_search.text = "No result for \"$text\""
+                                tv_empty_match_search.text = String.format("No result for \"%s\"", text)
                                 rv_match_search.invisible()
                                 tv_empty_match_search.visible()
                             } else {
@@ -94,7 +94,7 @@ class MatchSearchActivity : AppCompatActivity() {
                                 val adapter = MatchesScheduleAdapter(it) { event ->
                                     startActivity(
                                         intentFor<MatchDetailActivity>(
-                                            MatchDetailActivity.MATCH_PARCEL to event,
+                                            MatchDetailActivity.MATCH_ID to event.idEvent,
                                             MatchDetailActivity.HOME_BADGE to event.strHomeTeamBadge,
                                             MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
                                         )

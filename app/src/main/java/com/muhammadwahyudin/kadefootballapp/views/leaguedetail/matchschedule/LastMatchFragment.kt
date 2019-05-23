@@ -46,7 +46,7 @@ class LastMatchFragment : Fragment() {
         adapter = MatchesScheduleAdapter(listOf()) { event ->
             startActivity(
                 intentFor<MatchDetailActivity>(
-                    MatchDetailActivity.MATCH_PARCEL to event,
+                    MatchDetailActivity.MATCH_ID to event.idEvent,
                     MatchDetailActivity.HOME_BADGE to event.strHomeTeamBadge,
                     MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
                 )
@@ -67,7 +67,7 @@ class LastMatchFragment : Fragment() {
                     adapter = MatchesScheduleAdapter(events) { event ->
                         startActivity(
                             intentFor<MatchDetailActivity>(
-                                MatchDetailActivity.MATCH_PARCEL to event,
+                                MatchDetailActivity.MATCH_ID to event.idEvent,
                                 MatchDetailActivity.HOME_BADGE to event.strHomeTeamBadge,
                                 MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
                             )
@@ -76,7 +76,7 @@ class LastMatchFragment : Fragment() {
                     rv_last_match.adapter = adapter
                 } else {
                     // show empty view
-                    tv_empty_view.invisible()
+                    tv_empty_view.visible()
                 }
             })
         }

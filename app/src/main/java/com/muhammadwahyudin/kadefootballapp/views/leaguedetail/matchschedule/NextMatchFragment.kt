@@ -46,7 +46,7 @@ class NextMatchFragment : Fragment() {
         adapter = MatchesScheduleAdapter(listOf()) { event ->
             startActivity(
                 intentFor<MatchDetailActivity>(
-                    MatchDetailActivity.MATCH_PARCEL to event,
+                    MatchDetailActivity.MATCH_ID to event.idEvent,
                     MatchDetailActivity.HOME_BADGE to event.strHomeTeamBadge,
                     MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
                 )
@@ -67,7 +67,7 @@ class NextMatchFragment : Fragment() {
                     adapter = MatchesScheduleAdapter(events) { event ->
                         startActivity(
                             intentFor<MatchDetailActivity>(
-                                MatchDetailActivity.MATCH_PARCEL to event,
+                                MatchDetailActivity.MATCH_ID to event.idEvent,
                                 MatchDetailActivity.HOME_BADGE to event.strHomeTeamBadge,
                                 MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
                             )

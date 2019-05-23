@@ -287,5 +287,6 @@
     <string name="year_founded_title">Year Founded:</string>
     <string name="search_empty_view_instruction">Type something (min 3 chars)</string>
     <string name="something_went_wrong">Something went wrong</string>
+    <string name="no_favorited_match">No favorited match</string>
 
 </resources>

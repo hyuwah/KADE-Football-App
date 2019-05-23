@@ -47,12 +47,12 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
     }
 
     fun getNextMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>> {
-        val tempdata = arrayListOf<EventWithImage>()
+        val tempData = arrayListOf<EventWithImage>()
         val data = MutableLiveData<List<EventWithImage>>()
         theSportDbApiService.getNextMatchByLeagueId(leagueId).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess {
-                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempdata, data)
+                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempData, data)
                 else data.postValue(listOf())
             }.doOnError {
                 data.postValue(listOf())
@@ -61,12 +61,12 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
     }
 
     fun getLastMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>> {
-        val tempdata = arrayListOf<EventWithImage>()
+        val tempData = arrayListOf<EventWithImage>()
         val data = MutableLiveData<List<EventWithImage>>()
         theSportDbApiService.getLastMatchByLeagueId(leagueId).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess {
-                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempdata, data)
+                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempData, data)
                 else data.postValue(listOf())
             }.doOnError {
                 data.postValue(listOf())
@@ -75,12 +75,12 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
     }
 
     fun searchMatches(query: String): MutableLiveData<List<EventWithImage>> {
-        val tempdata = arrayListOf<EventWithImage>()
+        val tempData = arrayListOf<EventWithImage>()
         val data = MutableLiveData<List<EventWithImage>>()
         theSportDbApiService.searchMatches(query).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess {
-                if (!it.events.isNullOrEmpty()) updateSearchEventsWithTeamBadge(it, tempdata, data)
+                if (!it.events.isNullOrEmpty()) updateSearchEventsWithTeamBadge(it, tempData, data)
                 else data.postValue(listOf())
             }.doOnError {
                 data.postValue(listOf())
@@ -88,16 +88,14 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
         return data
     }
 
-    fun getMatchDetail(eventId: String): MutableLiveData<List<EventWithImage>> {
-        val tempdata = arrayListOf<EventWithImage>()
-        val data = MutableLiveData<List<EventWithImage>>()
+    fun getMatchDetail(eventId: String): MutableLiveData<EventWithImage> {
+        val data = MutableLiveData<EventWithImage>()
         theSportDbApiService.getMatchDetailByEventId(eventId).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess {
-                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempdata, data)
-                else data.postValue(listOf())
+                if (!it.events.isNullOrEmpty()) data.postValue(it.events[0])
             }.doOnError {
-                data.postValue(listOf())
+
             }.subscribe()
         return data
     }
@@ -117,7 +115,7 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
     // Gatau cara bikin data class implement Interface ._.
     private fun updateSearchEventsWithTeamBadge(
         it: SearchEventsRes, // Cuman beda serialized name doang, bad api response
-        tempdata: ArrayList<EventWithImage>,
+        tempData: ArrayList<EventWithImage>,
         data: MutableLiveData<List<EventWithImage>>
     ) {
         // Kumpulin Team Badge home & away
@@ -140,11 +138,11 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
 
                         event.strAwayTeamBadge = teamBadges[0]
                         event.strHomeTeamBadge = teamBadges[1]
-                        tempdata.add(event)
-                        data.postValue(tempdata.toList())
+                        tempData.add(event)
+                        data.postValue(tempData.toList())
                     }.doOnError {
-                        tempdata.add(event)
-                        data.postValue(tempdata.toList())
+                        tempData.add(event)
+                        data.postValue(tempData.toList())
                     }.subscribe()
             }
         }
@@ -153,7 +151,7 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
     // Gatau cara bikin data class implement Interface ._.
     private fun updateEventsWithTeamBadge(
         it: EventsRes, // Cuman beda serialized name doang, bad api response
-        tempdata: ArrayList<EventWithImage>,
+        tempData: ArrayList<EventWithImage>,
         data: MutableLiveData<List<EventWithImage>>
     ) {
         // Kumpulin Team Badge home & away
@@ -174,11 +172,11 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
                     // insert team badges ke masing-masing team di event
                     event.strAwayTeamBadge = teamBadges[0]
                     event.strHomeTeamBadge = teamBadges[1]
-                    tempdata.add(event)
-                    data.postValue(tempdata.toList())
+                    tempData.add(event)
+                    data.postValue(tempData.toList())
                 }.doOnError {
-                    tempdata.add(event)
-                    data.postValue(tempdata.toList())
+                    tempData.add(event)
+                    data.postValue(tempData.toList())
                 }.subscribe()
         }
     }

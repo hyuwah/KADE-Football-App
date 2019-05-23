@@ -208,6 +208,7 @@
                     <View
                             android:layout_width="match_parent" android:layout_height="2dp"
                             android:background="#e0e0e0"
+                            android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"/>
                     <TextView
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
