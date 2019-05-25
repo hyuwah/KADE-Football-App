@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.app.toReadableTimeWIB
 import com.muhammadwahyudin.kadefootballapp.data.local.database
@@ -22,6 +21,7 @@ import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.findOptional
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MatchDetailActivity : AppCompatActivity() {
 
@@ -31,7 +31,9 @@ class MatchDetailActivity : AppCompatActivity() {
         const val AWAY_BADGE = "away_badge"
     }
 
-    private lateinit var matchId: String // TODO mesti support FavoriteEvent juga
+    private val mViewModel: MatchDetailViewModel by viewModel()
+
+    private lateinit var matchId: String
     private var match: EventWithImage? = null
     private lateinit var homeBadge: String
     private lateinit var awayBadge: String
@@ -58,8 +60,8 @@ class MatchDetailActivity : AppCompatActivity() {
 
         if (matchId.isNotEmpty()) {
             //fetch match detail from viewmodel
-            val viewModel = ViewModelProviders.of(this).get(MatchDetailViewModel::class.java)
-            viewModel.loadMatchDetail(matchId).observe(this,
+            mViewModel.loadMatchDetail(matchId).observe(
+                this,
                 Observer<EventWithImage> { event ->
                     event.strAwayTeamBadge = awayBadge
                     event.strHomeTeamBadge = homeBadge

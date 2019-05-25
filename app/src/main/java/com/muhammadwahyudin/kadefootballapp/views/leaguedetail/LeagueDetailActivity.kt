@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.model.League
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
@@ -16,6 +15,7 @@ import com.muhammadwahyudin.kadefootballapp.views.matchsearch.MatchSearchActivit
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_league_detail.*
 import org.jetbrains.anko.intentFor
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class LeagueDetailActivity : AppCompatActivity() {
 
@@ -23,7 +23,7 @@ class LeagueDetailActivity : AppCompatActivity() {
         const val LEAGUE_PARCEL = "league_parcel"
     }
 
-    private lateinit var mViewModel: LeagueDetailViewModel
+    private val mViewModel: LeagueDetailViewModel by viewModel()
     private lateinit var leagueModel: League
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,6 @@ class LeagueDetailActivity : AppCompatActivity() {
         ct_layout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.white))
         ct_layout.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
 
-        mViewModel = ViewModelProviders.of(this).get(LeagueDetailViewModel::class.java)
         mViewModel.getLeagueDetail(leagueModel.id).observe(this,
             Observer<LeagueDetailRes.League> { league ->
                 Picasso.get().load(league?.strFanart1).into(iv_league_detail_banner)

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.muhammadwahyudin.kadefootballapp.R
@@ -16,10 +15,11 @@ import com.muhammadwahyudin.kadefootballapp.app.visible
 import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailActivity
 import kotlinx.android.synthetic.main.last_match_fragment.*
 import org.jetbrains.anko.support.v4.intentFor
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class LastMatchFragment : Fragment() {
 
-    private lateinit var scheduleViewModel: MatchScheduleViewModel
+    private val scheduleViewModel: MatchScheduleViewModel by viewModel()
     lateinit var adapter: MatchesScheduleAdapter
     private var mLeagueId: String? = null
 
@@ -58,7 +58,6 @@ class LastMatchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        scheduleViewModel = ViewModelProviders.of(this).get(MatchScheduleViewModel::class.java)
         mLeagueId?.let {
             scheduleViewModel.getLastEvents(it).observe(this, Observer { events ->
                 progressbar_last_match.invisible()

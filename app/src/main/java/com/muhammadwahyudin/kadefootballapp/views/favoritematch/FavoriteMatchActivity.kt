@@ -3,7 +3,6 @@ package com.muhammadwahyudin.kadefootballapp.views.favoritematch
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.muhammadwahyudin.kadefootballapp.R
@@ -13,9 +12,11 @@ import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
 import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailActivity
 import kotlinx.android.synthetic.main.activity_favorite_match.*
 import org.jetbrains.anko.intentFor
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class FavoriteMatchActivity : AppCompatActivity() {
 
+    private val favoriteMatchViewModel: FavoriteMatchViewModel by viewModel()
     lateinit var adapter: FavoriteMatchAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +33,8 @@ class FavoriteMatchActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val viewModel = ViewModelProviders.of(this).get(FavoriteMatchViewModel::class.java)
-        viewModel.loadFavoritedEvents(this).observe(this,
+        favoriteMatchViewModel.loadFavoritedEvents().observe(
+            this,
             Observer<List<FavoriteEvent>> { list ->
                 progressbar_favorite_match.invisible()
                 tv_empty_view.invisible()

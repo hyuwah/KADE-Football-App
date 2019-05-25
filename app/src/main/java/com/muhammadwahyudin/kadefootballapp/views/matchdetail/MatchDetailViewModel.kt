@@ -5,15 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.muhammadwahyudin.kadefootballapp.data.Repository
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
-import com.muhammadwahyudin.kadefootballapp.data.remote.TheSportDbApiService
 
-class MatchDetailViewModel : ViewModel() {
-    // TODO Dependency injection with Kodein / Koin
-    private val mRepository = Repository(TheSportDbApiService.create())
+class MatchDetailViewModel(private val repository: Repository) : ViewModel() {
     private var mEventWithImage = MutableLiveData<EventWithImage>()
 
     fun loadMatchDetail(id: String): LiveData<EventWithImage> {
-        mEventWithImage = mRepository.getMatchDetail(id)
+        mEventWithImage = repository.getMatchDetail(id)
         return mEventWithImage
     }
 }

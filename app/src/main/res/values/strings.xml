@@ -269,7 +269,6 @@
         </item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="score_separator">:</string>
     <string name="match_details_goals">Goals</string>
     <string name="match_details_shots">Shots</string>

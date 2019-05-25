@@ -9,11 +9,10 @@ import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.select
 
-class FavoriteMatchViewModel : ViewModel() {
-    // TODO Ambil dari DI / Kodein
+class FavoriteMatchViewModel(val context: Context) : ViewModel() {
     private var favoritedEventsSchedule = MutableLiveData<List<FavoriteEvent>>()
 
-    fun loadFavoritedEvents(context: Context): LiveData<List<FavoriteEvent>> {
+    fun loadFavoritedEvents(): LiveData<List<FavoriteEvent>> {
         context.database.use {
             val result = select(FavoriteEvent.TABLE_NAME)
             val favorite = result.parseList(classParser<FavoriteEvent>())

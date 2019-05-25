@@ -41,7 +41,7 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
             .doOnSuccess {
                 data.postValue(it)
             }.doOnError {
-                data.postValue(null)
+
             }.subscribe()
         return data
     }
@@ -107,7 +107,7 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) {
             .doOnSuccess {
                 data.postValue(it.teams[0])
             }.doOnError {
-                data.postValue(null)
+
             }.subscribe()
         return data
     }

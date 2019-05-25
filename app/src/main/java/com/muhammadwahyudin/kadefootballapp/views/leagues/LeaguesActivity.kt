@@ -12,19 +12,18 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.Repository
-import com.muhammadwahyudin.kadefootballapp.data.remote.TheSportDbApiService
 import com.muhammadwahyudin.kadefootballapp.views.favoritematch.FavoriteMatchActivity
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.LeagueDetailActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.sdk27.coroutines.onClick
+import org.koin.android.ext.android.inject
 
 class LeaguesActivity : AppCompatActivity() {
 
     // Should be injected / or use viewmodel, tapi pengecualian
-    // TODO ambil dari DI / Kodein
-    private val repository = Repository(TheSportDbApiService.create())
+    private val repository: Repository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

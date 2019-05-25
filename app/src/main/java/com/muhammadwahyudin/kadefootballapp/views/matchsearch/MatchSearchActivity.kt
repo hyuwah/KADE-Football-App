@@ -5,7 +5,6 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.muhammadwahyudin.kadefootballapp.R
@@ -20,10 +19,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_match_search.*
 import org.jetbrains.anko.intentFor
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 class MatchSearchActivity : AppCompatActivity() {
-    private lateinit var viewModel: MatchSearchViewModel
+    private val matchSearchViewModel: MatchSearchViewModel by viewModel()
     private lateinit var disposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +31,6 @@ class MatchSearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_match_search)
 
         title = "Search Match"
-        viewModel = ViewModelProviders.of(this).get(MatchSearchViewModel::class.java)
         rv_match_search.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         tv_empty_match_search.text = getString(R.string.search_empty_view_instruction)
         tv_empty_match_search.visible()
@@ -81,7 +80,8 @@ class MatchSearchActivity : AppCompatActivity() {
                 progressbar_match_search.visible()
                 tv_empty_match_search.invisible()
                 rv_match_search.invisible()
-                viewModel.fetchEventsByQuery(text).observe(this,
+                matchSearchViewModel.fetchEventsByQuery(text).observe(
+                    this,
                     Observer<List<EventWithImage>> { events ->
                         progressbar_match_search.invisible()
                         events?.let {

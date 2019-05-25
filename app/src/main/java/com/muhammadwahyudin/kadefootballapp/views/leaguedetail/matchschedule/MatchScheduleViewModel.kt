@@ -5,22 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.muhammadwahyudin.kadefootballapp.data.Repository
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
-import com.muhammadwahyudin.kadefootballapp.data.remote.TheSportDbApiService
 
-class MatchScheduleViewModel : ViewModel() {
-    // TODO Ambil dari DI / Kodein
-    private val mRepository = Repository(TheSportDbApiService.create())
-
+class MatchScheduleViewModel(private val repository: Repository) : ViewModel() {
     private var lastEventsSchedule = MutableLiveData<List<EventWithImage>>()
     private var nextEventsSchedule = MutableLiveData<List<EventWithImage>>()
 
     fun getLastEvents(leagueId: String): LiveData<List<EventWithImage>> {
-        lastEventsSchedule = mRepository.getLastMatchByLeagueId(leagueId)
+        lastEventsSchedule = repository.getLastMatchByLeagueId(leagueId)
         return lastEventsSchedule
     }
 
     fun getNextEvents(leagueId: String): LiveData<List<EventWithImage>> {
-        nextEventsSchedule = mRepository.getNextMatchByLeagueId(leagueId)
+        nextEventsSchedule = repository.getNextMatchByLeagueId(leagueId)
         return nextEventsSchedule
     }
 
