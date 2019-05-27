@@ -22,6 +22,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 androidExtensions {
@@ -31,6 +34,8 @@ androidExtensions {
 ext.anko_version = '0.10.8'
 ext.retrofit_version = '2.5.0'
 ext.lifecycle_version = "2.2.0-alpha01"
+ext.mockito_version = "2.27.0"
+ext.koin_version = "2.0.0"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -53,6 +58,7 @@ dependencies {
 
     // RX
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
     // RXAndroid contains RxJava dependencies, apa mesti explicitly tambah juga ato cukup pake bawaan rxandroid?
 
     // Viewmodel
@@ -63,7 +69,7 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
     // Dependency Injection
-    implementation 'org.koin:koin-android-viewmodel:2.0.0'
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.code.gson:gson:2.8.5'
@@ -73,6 +79,15 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.1'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation "org.koin:koin-test:$koin_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_version"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
+    androidTestImplementation 'androidx.test:core:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.1.1'
+    testImplementation "androidx.arch.core:core-testing:2.0.1"
+    androidTestImplementation "androidx.arch.core:core-testing:2.0.1"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1-beta01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
 }

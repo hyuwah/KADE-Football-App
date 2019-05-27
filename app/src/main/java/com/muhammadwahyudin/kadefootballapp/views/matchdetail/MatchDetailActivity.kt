@@ -76,6 +76,7 @@ class MatchDetailActivity : AppCompatActivity() {
     private fun setUiContent(event: EventWithImage) {
         title = event.strEvent
         tv_datetime.text = event.strTime?.toReadableTimeWIB(event.dateEvent!!)
+        tv_league.text = event.strLeague
 
         tv_home_team_name.text = event.strHomeTeam
         tv_home_score.text = event.intHomeScore ?: "-"

@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.muhammadwahyudin.kadefootballapp.R
-import com.muhammadwahyudin.kadefootballapp.data.Repository
+import com.muhammadwahyudin.kadefootballapp.data.IRepository
 import com.muhammadwahyudin.kadefootballapp.views.favoritematch.FavoriteMatchActivity
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.LeagueDetailActivity
 import org.jetbrains.anko.*
@@ -23,7 +23,7 @@ import org.koin.android.ext.android.inject
 class LeaguesActivity : AppCompatActivity() {
 
     // Should be injected / or use viewmodel, tapi pengecualian
-    private val repository: Repository by inject()
+    private val repository: IRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

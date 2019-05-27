@@ -33,7 +33,7 @@ class FavoriteMatchActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        favoriteMatchViewModel.loadFavoritedEvents().observe(
+        favoriteMatchViewModel.loadFavoritedEvents(this).observe(
             this,
             Observer<List<FavoriteEvent>> { list ->
                 progressbar_favorite_match.invisible()

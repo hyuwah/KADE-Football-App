@@ -3,10 +3,10 @@ package com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.muhammadwahyudin.kadefootballapp.data.Repository
+import com.muhammadwahyudin.kadefootballapp.data.IRepository
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
 
-class MatchScheduleViewModel(private val repository: Repository) : ViewModel() {
+class MatchScheduleViewModel(private val repository: IRepository) : ViewModel() {
     private var lastEventsSchedule = MutableLiveData<List<EventWithImage>>()
     private var nextEventsSchedule = MutableLiveData<List<EventWithImage>>()
 
