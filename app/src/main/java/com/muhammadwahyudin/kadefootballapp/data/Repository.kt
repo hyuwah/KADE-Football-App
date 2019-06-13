@@ -1,6 +1,7 @@
 package com.muhammadwahyudin.kadefootballapp.data
 
 import android.content.Context
+import android.content.res.Resources
 import androidx.lifecycle.MutableLiveData
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.local.database
@@ -22,12 +23,12 @@ import org.jetbrains.anko.db.select
 
 class Repository(private val theSportDbApiService: TheSportDbApiService) : IRepository {
 
-    override fun getLeagues(context: Context): List<League> {
+    override fun getLeagues(resources: Resources): List<League> {
         val leagues = arrayListOf<League>()
-        val names = context.resources.getStringArray(R.array.league_name)
-        val ids = context.resources.getIntArray(R.array.league_id)
-        val desc = context.resources.getStringArray(R.array.league_desc)
-        val images = context.resources.obtainTypedArray(R.array.league_image)
+        val names = resources.getStringArray(R.array.league_name)
+        val ids = resources.getIntArray(R.array.league_id)
+        val desc = resources.getStringArray(R.array.league_desc)
+        val images = resources.obtainTypedArray(R.array.league_image)
         for (i in names.indices) {
             leagues.add(League(ids[i], names[i], desc[i], images.getResourceId(i, 0)))
         }

@@ -28,7 +28,7 @@ class LeaguesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val leagues = repository.getLeagues(this)
+        val leagues = repository.getLeagues(this.resources)
 
         verticalLayout {
             background = ColorDrawable(Color.parseColor("#efefef"))

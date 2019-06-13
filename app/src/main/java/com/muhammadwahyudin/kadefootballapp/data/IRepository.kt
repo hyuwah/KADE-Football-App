@@ -1,6 +1,7 @@
 package com.muhammadwahyudin.kadefootballapp.data
 
 import android.content.Context
+import android.content.res.Resources
 import androidx.lifecycle.MutableLiveData
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
 import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
@@ -11,7 +12,7 @@ import com.muhammadwahyudin.kadefootballapp.data.remote.response.SearchEventsRes
 import io.reactivex.Single
 
 interface IRepository {
-    fun getLeagues(context: Context): List<League>
+    fun getLeagues(resources: Resources): List<League>
     fun getLeagueDetail(id: Int): MutableLiveData<LeagueDetailRes.League>
     fun getNextMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>>
     fun getLastMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>>
