@@ -5,6 +5,12 @@ import android.content.res.TypedArray
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.remote.TheSportDbApiService
+import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Single
+import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -24,7 +30,7 @@ class RepositoryTest {
 
     @Before
     fun setUp() {
-        tsdbApi = TheSportDbApiService.create()
+        tsdbApi = mock()
         repo = Repository(tsdbApi)
     }
 
@@ -49,6 +55,24 @@ class RepositoryTest {
 
     @Test
     fun getLeagueDetail() {
+        val leagueId = 4328
+        val mockRes = LeagueDetailRes(listOf(LeagueDetailRes.League()))
+        val testObserver = TestObserver<LeagueDetailRes.League>()
+        whenever(tsdbApi.getLeagueDetail(leagueId)).thenAnswer {
+            println(mockRes)
+            Single.just(mockRes)
+        }
+        val leagueDetail = repo.getLeagueDetail(leagueId)
+        verify(tsdbApi).getLeagueDetail(leagueId)
+        leagueDetail.observeForever {
+            println("Observe Forever $it")
+            testObserver
+        }
+        print(leagueDetail.hasObservers())
+        testObserver.assertNoValues()
+        testObserver.onNext(mockRes.leagues[0])
+        testObserver.assertValueCount(1)
+
     }
 
     @Test
