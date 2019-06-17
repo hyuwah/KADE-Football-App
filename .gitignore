@@ -11,3 +11,9 @@
 /build
 /captures
 .externalNativeBuild
+
+\.idea/markdown-navigator/
+
+\.idea/codeStyles/
+
+KADE-Football-App\.zip

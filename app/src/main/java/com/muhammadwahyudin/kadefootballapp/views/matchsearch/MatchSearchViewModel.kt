@@ -28,13 +28,9 @@ class MatchSearchViewModel(private val repository: IRepository) : ViewModel() {
                 if (t.events.isNullOrEmpty()) state.postValue(NoResultState(query))
                 !t.events.isNullOrEmpty()
             }
-            .map { t: SearchEventsRes ->
-                t.events
-            }
+            .map { t: SearchEventsRes -> t.events }
             .flattenAsObservable { t: List<EventWithImage> -> t }
-            .filter { t ->
-                t.strSport.contains("Soccer")
-            }
+            .filter { t -> t.strSport.contains("Soccer") }
             .flatMapSingle { event ->
                 println(event.strEvent)
                 repository.updateEventWithTeamBadge(event)

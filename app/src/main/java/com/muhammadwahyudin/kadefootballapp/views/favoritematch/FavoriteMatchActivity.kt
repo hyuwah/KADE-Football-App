@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.app.invisible
 import com.muhammadwahyudin.kadefootballapp.app.visible
+import com.muhammadwahyudin.kadefootballapp.data.local.database
 import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
 import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailActivity
 import kotlinx.android.synthetic.main.activity_favorite_match.*
@@ -33,7 +34,7 @@ class FavoriteMatchActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        favoriteMatchViewModel.loadFavoritedEvents(this).observe(
+        favoriteMatchViewModel.loadFavoritedEvents(this.database).observe(
             this,
             Observer<List<FavoriteEvent>> { list ->
                 progressbar_favorite_match.invisible()

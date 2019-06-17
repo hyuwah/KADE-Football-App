@@ -1,10 +1,10 @@
 package com.muhammadwahyudin.kadefootballapp.data
 
-import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.muhammadwahyudin.kadefootballapp.R
-import com.muhammadwahyudin.kadefootballapp.data.local.database
+import com.muhammadwahyudin.kadefootballapp.data.local.DatabaseHelper
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
 import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
 import com.muhammadwahyudin.kadefootballapp.data.model.League
@@ -14,14 +14,19 @@ import com.muhammadwahyudin.kadefootballapp.data.remote.response.EventsRes
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.SearchEventsRes
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.TeamsRes
+import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
-import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.select
 
-class Repository(private val theSportDbApiService: TheSportDbApiService) : IRepository {
+class Repository(
+    private val bgScheduler: Scheduler,
+    private val mainScheduler: Scheduler,
+    private val theSportDbApiService: TheSportDbApiService
+) : IRepository {
+
+    val TAG = Repository::class.java.simpleName
 
     override fun getLeagues(resources: Resources): List<League> {
         val leagues = arrayListOf<League>()
@@ -38,15 +43,19 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) : IRepo
 
     override fun getLeagueDetail(id: Int): MutableLiveData<LeagueDetailRes.League> {
         val data = MutableLiveData<LeagueDetailRes.League>()
-        theSportDbApiService.getLeagueDetail(id).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        theSportDbApiService.getLeagueDetail(id)
+            .subscribeOn(bgScheduler)
+            .observeOn(mainScheduler)
             .map {
-                it.leagues[0]
+                if (!it.leagues.isNullOrEmpty())
+                    it.leagues[0]
+                else
+                    LeagueDetailRes.League() // Return Empty LeagueDetail data if no data from network
             }
             .doOnSuccess {
                 data.postValue(it)
             }.doOnError {
-
+                Log.e(TAG, "Network exception for league id: $id", it)
             }.subscribe()
         return data
     }
@@ -54,8 +63,9 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) : IRepo
     override fun getNextMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>> {
         val tempData = arrayListOf<EventWithImage>()
         val data = MutableLiveData<List<EventWithImage>>()
-        theSportDbApiService.getNextMatchByLeagueId(leagueId).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        theSportDbApiService.getNextMatchByLeagueId(leagueId)
+            .subscribeOn(bgScheduler)
+            .observeOn(mainScheduler)
             .doOnSuccess {
                 if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempData, data)
                 else data.postValue(listOf())
@@ -68,8 +78,9 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) : IRepo
     override fun getLastMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>> {
         val tempData = arrayListOf<EventWithImage>()
         val data = MutableLiveData<List<EventWithImage>>()
-        theSportDbApiService.getLastMatchByLeagueId(leagueId).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        theSportDbApiService.getLastMatchByLeagueId(leagueId)
+            .subscribeOn(bgScheduler)
+            .observeOn(mainScheduler)
             .doOnSuccess {
                 if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempData, data)
                 else data.postValue(listOf())
@@ -85,33 +96,34 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) : IRepo
 
     override fun getMatchDetail(eventId: String): MutableLiveData<EventWithImage> {
         val data = MutableLiveData<EventWithImage>()
-        theSportDbApiService.getMatchDetailByEventId(eventId).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        theSportDbApiService.getMatchDetailByEventId(eventId)
+            .subscribeOn(bgScheduler)
+            .observeOn(mainScheduler)
             .doOnSuccess {
                 if (!it.events.isNullOrEmpty()) data.postValue(it.events[0])
             }.doOnError {
-
+                Log.e(TAG, "Network exception for event id: $eventId", it)
             }.subscribe()
         return data
     }
 
     override fun getTeamDetail(teamId: String): MutableLiveData<Team> {
         val data = MutableLiveData<Team>()
-        theSportDbApiService.getTeamDetail(teamId).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        theSportDbApiService.getTeamDetail(teamId)
+            .subscribeOn(bgScheduler)
+            .observeOn(mainScheduler)
             .doOnSuccess {
-                data.postValue(it.teams[0])
+                if (!it.teams.isNullOrEmpty()) data.postValue(it.teams[0])
             }.doOnError {
-
+                Log.e(TAG, "Network exception for team id: $teamId", it)
             }.subscribe()
         return data
     }
 
-    override fun getFavoriteEvents(context: Context): List<FavoriteEvent> {
-        return context.database.use {
+    override fun getFavoriteEvents(db: DatabaseHelper): List<FavoriteEvent> {
+        return db.use {
             val result = select(FavoriteEvent.TABLE_NAME)
-            val favorite = result.parseList(classParser<FavoriteEvent>())
-            return@use favorite
+            return@use result.parseList(classParser())
         }
     }
 
@@ -129,7 +141,7 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) : IRepo
     }
 
     private fun updateEventsWithTeamBadge(
-        it: EventsRes, // Cuman beda serialized name doang, bad api response
+        it: EventsRes, // Cuman beda serialized name doang, bad api response design
         tempData: ArrayList<EventWithImage>,
         data: MutableLiveData<List<EventWithImage>>
     ) {
@@ -144,9 +156,9 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) : IRepo
                     teamBadges.add(awayRes.teams[0].strTeamBadge)
                     teamBadges.add(homeRes.teams[0].strTeamBadge)
                     teamBadges.toList()
-                }
-            ).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                })
+                .subscribeOn(bgScheduler)
+                .observeOn(mainScheduler)
                 .doOnSuccess { teamBadges ->
                     // insert team badges ke masing-masing team di event
                     event.strAwayTeamBadge = teamBadges[0]
@@ -156,6 +168,7 @@ class Repository(private val theSportDbApiService: TheSportDbApiService) : IRepo
                 }.doOnError {
                     tempData.add(event)
                     data.postValue(tempData.toList())
+                    Log.e(TAG, "Network exception for event id: ${event.idEvent}", it)
                 }.subscribe()
         }
     }

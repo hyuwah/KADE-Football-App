@@ -1,8 +1,8 @@
 package com.muhammadwahyudin.kadefootballapp.data
 
-import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.MutableLiveData
+import com.muhammadwahyudin.kadefootballapp.data.local.DatabaseHelper
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
 import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
 import com.muhammadwahyudin.kadefootballapp.data.model.League
@@ -19,7 +19,7 @@ interface IRepository {
     fun searchMatches(query: String): Single<SearchEventsRes>
     fun getMatchDetail(eventId: String): MutableLiveData<EventWithImage>
     fun getTeamDetail(teamId: String): MutableLiveData<Team>
-    fun getFavoriteEvents(context: Context): List<FavoriteEvent>
+    fun getFavoriteEvents(db: DatabaseHelper): List<FavoriteEvent>
     fun updateEventWithTeamBadge(event: EventWithImage): Single<List<String>>
 
 }
