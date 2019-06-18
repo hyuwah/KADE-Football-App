@@ -26,8 +26,7 @@ import org.junit.Test
 @LargeTest
 class MatchSearchTest {
 
-    @Rule
-    @JvmField
+    @get:Rule
     var mActivityTestRule = ActivityTestRule(LeaguesActivity::class.java)
 
     private val okhttpResources = OkHttp3IdlingResource.create(

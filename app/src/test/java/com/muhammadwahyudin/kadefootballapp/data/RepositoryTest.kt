@@ -134,7 +134,7 @@ class RepositoryTest {
      * might fail the test if the data from network changes, or site is down
      */
     @Test
-    fun get_next_match_by_league_id_from_network_failed() {
+    fun get_next_match_by_league_id_from_network_empty() {
         // Given
         val leagueId = "123"
         println("League ID: $leagueId")
@@ -173,7 +173,7 @@ class RepositoryTest {
      * might fail the test if the data from network changes, or site is down
      */
     @Test
-    fun get_last_match_by_league_id_from_network_failed() {
+    fun get_last_match_by_league_id_from_network_empty() {
         // Given
         val leagueId = "123"
         println("League ID: $leagueId")
