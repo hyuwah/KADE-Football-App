@@ -3,6 +3,7 @@ package com.muhammadwahyudin.kadefootballapp.data.remote
 import com.muhammadwahyudin.kadefootballapp.BuildConfig
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.*
 import io.reactivex.Single
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -46,8 +47,10 @@ interface TheSportDbApiService {
     fun getTeamDetail(@Query("id") teamId: String): Single<TeamsRes>
 
     companion object Factory {
+        val client = OkHttpClient()
         fun create(): TheSportDbApiService {
             val retrofit = Retrofit.Builder()
+                .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(BuildConfig.BASE_URL) // TODO-ASK base url sampe domain .com ato sampe common path terakhir (apikey) ?

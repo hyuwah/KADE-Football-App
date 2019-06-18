@@ -18,7 +18,7 @@ val appModule = module {
     single { TheSportDbApiService.create() }
     single { Repository(Schedulers.io(), AndroidSchedulers.mainThread(), get()) as IRepository }
     viewModel { LeagueDetailViewModel(get()) }
-    viewModel { MatchDetailViewModel(get()) }
+    viewModel { MatchDetailViewModel(get(), get()) }
     viewModel { MatchScheduleViewModel(get()) }
     viewModel { FavoriteMatchViewModel(androidContext(), get()) }
     viewModel { MatchSearchViewModel(get()) }

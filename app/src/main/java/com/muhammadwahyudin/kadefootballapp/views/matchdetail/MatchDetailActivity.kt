@@ -1,7 +1,6 @@
 package com.muhammadwahyudin.kadefootballapp.views.matchdetail
 
 import android.annotation.SuppressLint
-import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -10,15 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.app.toReadableTimeWIB
-import com.muhammadwahyudin.kadefootballapp.data.local.database
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
-import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
+import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailViewModel.DB_OPS_STATE.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_match_detail.*
-import org.jetbrains.anko.db.classParser
-import org.jetbrains.anko.db.delete
-import org.jetbrains.anko.db.insert
-import org.jetbrains.anko.db.select
 import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.findOptional
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -38,7 +32,6 @@ class MatchDetailActivity : AppCompatActivity() {
     private lateinit var homeBadge: String
     private lateinit var awayBadge: String
 
-    private var isFavorited = false
     private var favoriteBtn: MenuItem? = null
 
 
@@ -139,81 +132,31 @@ class MatchDetailActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.match_detail_menu, menu)
         favoriteBtn = menu?.findItem(R.id.favorite_action)
         favoriteBtn?.isVisible = false
-        isFavorited()
+
+        mViewModel.isFavoritedMatch(matchId).observe(this,
+            Observer {
+                if (it) favoriteBtn?.setIcon(R.drawable.ic_favorite)
+                else favoriteBtn?.setIcon(R.drawable.ic_favorite_border)
+            })
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.favorite_action -> {
-                toggleFavoriteAction(item)
+                mViewModel.updateFavoriteState().observe(this,
+                    Observer {
+                        when (it) {
+                            INSERT_SUCCESS -> findOptional<View>(android.R.id.content)?.snackbar("Added to favorite")
+                            REMOVE_SUCCESS -> findOptional<View>(android.R.id.content)?.snackbar("Removed from favorite")
+                            ERROR -> findOptional<View>(android.R.id.content)?.snackbar("Database Operation Failed")
+                            else -> {
+                            }
+                        }
+                    })
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun toggleFavoriteAction(item: MenuItem) {
-        isFavorited = !isFavorited
-        if (isFavorited) {
-            item.setIcon(R.drawable.ic_favorite)
-            addToFavorite()
-        } else {
-            item.setIcon(R.drawable.ic_favorite_border)
-            removeFromFavorite()
-            findOptional<View>(android.R.id.content)?.snackbar("Removed from favorite")
-        }
-    }
-
-    private fun addToFavorite() {
-        try {
-            database.use {
-                insert(
-                    FavoriteEvent.TABLE_NAME,
-                    FavoriteEvent.EVENT_ID to matchId,
-                    FavoriteEvent.EVENT_DATE to match?.strTime?.toReadableTimeWIB(match?.dateEvent!!),
-                    FavoriteEvent.EVENT_NAME to match?.strEvent,
-                    FavoriteEvent.TEAM_HOME_NAME to match?.strHomeTeam,
-                    FavoriteEvent.TEAM_HOME_SCORE to match?.intHomeScore,
-                    FavoriteEvent.TEAM_HOME_BADGE_URL to homeBadge,
-                    FavoriteEvent.TEAM_AWAY_NAME to match?.strAwayTeam,
-                    FavoriteEvent.TEAM_AWAY_SCORE to match?.intAwayScore,
-                    FavoriteEvent.TEAM_AWAY_BADGE_URL to awayBadge
-                )
-            }
-            findOptional<View>(android.R.id.content)?.snackbar("Added to favorite")
-        } catch (e: SQLiteConstraintException) {
-            findOptional<View>(android.R.id.content)?.snackbar(e.localizedMessage)
-        }
-    }
-
-    private fun removeFromFavorite() {
-        try {
-            database.use {
-                delete(
-                    FavoriteEvent.TABLE_NAME,
-                    "(EVENT_ID = {id})",
-                    "id" to matchId
-                )
-            }
-            findOptional<View>(android.R.id.content)?.snackbar("Removed from favorite")
-        } catch (e: SQLiteConstraintException) {
-            findOptional<View>(android.R.id.content)?.snackbar(e.localizedMessage)
-        }
-    }
-
-    private fun isFavorited() {
-        database.use {
-            val result = select(FavoriteEvent.TABLE_NAME)
-                .whereArgs("(EVENT_ID = {id})", "id" to matchId)
-            val favorite = result.parseList(classParser<FavoriteEvent>())
-            if (favorite.isNotEmpty()) {
-                isFavorited = true
-                favoriteBtn?.setIcon(R.drawable.ic_favorite)
-            } else {
-                isFavorited = false
-                favoriteBtn?.setIcon(R.drawable.ic_favorite_border)
-            }
         }
     }
 }

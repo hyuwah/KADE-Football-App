@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.muhammadwahyudin.kadefootballapp.R
+import com.muhammadwahyudin.kadefootballapp.app.EspressoIdlingResources
 import com.muhammadwahyudin.kadefootballapp.app.invisible
 import com.muhammadwahyudin.kadefootballapp.app.visible
 import com.muhammadwahyudin.kadefootballapp.data.model.*
@@ -39,9 +40,11 @@ class MatchSearchActivity : AppCompatActivity() {
                         tv_empty_match_search.text = getString(R.string.search_empty_view_instruction)
                     }
                     is LoadingState -> {
+                        EspressoIdlingResources.increment()
                         showView(progressBar = true)
                     }
                     is PopulatedState -> {
+                        EspressoIdlingResources.decrement()
                         showView(recyclerView = true)
                         val adapter = MatchesScheduleAdapter(it.data) { event ->
                             startActivity(
@@ -55,10 +58,12 @@ class MatchSearchActivity : AppCompatActivity() {
                         rv_match_search.adapter = adapter
                     }
                     is NoResultState -> {
+                        EspressoIdlingResources.decrement()
                         showView(emptyView = true)
                         tv_empty_match_search.text = String.format("No result for \"%s\"", it.data)
                     }
                     is ErrorState -> {
+                        EspressoIdlingResources.decrement()
                         showView(emptyView = true)
                         tv_empty_match_search.text = it.message
                     }

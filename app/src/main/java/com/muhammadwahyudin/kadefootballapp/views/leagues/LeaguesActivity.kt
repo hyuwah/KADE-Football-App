@@ -59,6 +59,7 @@ class LeaguesActivity : AppCompatActivity() {
                 margin = dip(12)
             }
             recyclerView {
+                id = R.id.rv_leagues
                 padding = dip(8)
                 lparams(matchParent, matchParent)
                 adapter = LeagueAdapter(leagues) { leagueModel ->

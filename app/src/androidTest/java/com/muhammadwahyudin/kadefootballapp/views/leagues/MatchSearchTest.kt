@@ -4,44 +4,60 @@ package com.muhammadwahyudin.kadefootballapp.views.leagues
 import android.view.View
 import android.view.ViewGroup
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
+import com.jakewharton.espresso.OkHttp3IdlingResource
 import com.muhammadwahyudin.kadefootballapp.R
+import com.muhammadwahyudin.kadefootballapp.app.EspressoIdlingResources
+import com.muhammadwahyudin.kadefootballapp.data.remote.TheSportDbApiService
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
 @LargeTest
-@RunWith(AndroidJUnit4::class)
-class MatchSearchActivityTest {
+class MatchSearchTest {
 
     @Rule
     @JvmField
     var mActivityTestRule = ActivityTestRule(LeaguesActivity::class.java)
 
+    private val okhttpResources = OkHttp3IdlingResource.create(
+        "okhttp",
+        TheSportDbApiService.client
+    )
+    private val espressoIdlingResources = EspressoIdlingResources.idlingResource
+
+    @Before
+    fun setup() {
+        IdlingRegistry.getInstance().register(okhttpResources)
+        IdlingRegistry.getInstance().register(espressoIdlingResources)
+    }
+
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(okhttpResources)
+        IdlingRegistry.getInstance().unregister(espressoIdlingResources)
+    }
+
+
     @Test
-    fun matchSearchActivity() {
-        val _CardView = onView(
+    fun search_match() {
+        val rvLeagues = onView(
             allOf(
-                childAtPosition(
-                    childAtPosition(
-                        withClassName(`is`("org.jetbrains.anko._LinearLayout")),
-                        1
-                    ),
-                    0
-                ),
+                withId(R.id.rv_leagues),
                 isDisplayed()
             )
         )
-        _CardView.perform(click())
+        rvLeagues.perform(RecyclerViewActions.actionOnItemAtPosition<LeagueAdapter.ViewHolder>(0, click()))
 
         val actionMenuItemView = onView(
             allOf(
@@ -93,7 +109,18 @@ class MatchSearchActivityTest {
             )
         )
         searchAutoComplete2.perform(pressImeActionButton())
+
+        // Assertion for search recyclerview
+        onView(
+            allOf(
+                withId(R.id.rv_match_search),
+                isDisplayed(),
+                hasMinimumChildCount(1)
+            )
+        ) ?: error(println("Search Item Not Exist"))
+
     }
+
 
     private fun childAtPosition(
         parentMatcher: Matcher<View>, position: Int

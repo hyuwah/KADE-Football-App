@@ -2,4 +2,5 @@
 <resources>
     <item name="league_item_image" type="id"/>
     <item name="league_item_name" type="id"/>
+    <item name="rv_leagues" type="id"/>
 </resources>

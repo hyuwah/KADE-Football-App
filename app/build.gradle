@@ -66,7 +66,6 @@ dependencies {
     // Viewmodel
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
@@ -80,20 +79,21 @@ dependencies {
 
     implementation 'com.facebook.stetho:stetho:1.5.1'
 
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.koin:koin-test:$koin_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
     testImplementation 'com.jraska.livedata:testing-ktx:1.1.0'
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
     androidTestImplementation 'androidx.test:core:1.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     testImplementation "androidx.arch.core:core-testing:2.0.1"
     androidTestImplementation "androidx.arch.core:core-testing:2.0.1"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2'
     androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0'
 
 }
