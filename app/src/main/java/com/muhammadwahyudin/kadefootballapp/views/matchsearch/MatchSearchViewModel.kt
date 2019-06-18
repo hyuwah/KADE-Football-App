@@ -13,9 +13,7 @@ import io.reactivex.schedulers.Schedulers
 class MatchSearchViewModel(private val repository: IRepository) : ViewModel() {
 
     // StateVM nya ikut mahzab https://medium.com/@oziemowa/android-viewmodel-testing-with-view-states-2a30c461939b
-    val state = MutableLiveData<ResourceState<List<EventWithImage>>>().apply {
-        value = EmptyState()
-    }
+    val state = MutableLiveData<ResourceState<List<EventWithImage>>>(EmptyState())
     private val compositeDisposable = CompositeDisposable()
 
     fun searchMatch(query: String) {

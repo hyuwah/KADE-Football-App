@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.app.invisible
 import com.muhammadwahyudin.kadefootballapp.app.visible
+import com.muhammadwahyudin.kadefootballapp.data.model.EmptyState
+import com.muhammadwahyudin.kadefootballapp.data.model.LoadingState
+import com.muhammadwahyudin.kadefootballapp.data.model.NoResultState
+import com.muhammadwahyudin.kadefootballapp.data.model.PopulatedState
 import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailActivity
 import kotlinx.android.synthetic.main.next_match_fragment.*
 import org.jetbrains.anko.support.v4.intentFor
@@ -40,8 +44,6 @@ class NextMatchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mLeagueId = arguments?.getString(LEAGUE_ID)
-        progressbar_next_match.visible()
-        tv_empty_view.invisible()
         // Prepare recyclerview & adapter
         adapter = MatchesScheduleAdapter(listOf()) { event ->
             startActivity(
@@ -59,23 +61,31 @@ class NextMatchFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mLeagueId?.let {
-            scheduleViewModel.getNextEvents(it).observe(this, Observer { events ->
-                progressbar_next_match.invisible()
-                if (events.isNotEmpty()) {
-                    // update adapter
-                    adapter = MatchesScheduleAdapter(events) { event ->
-                        startActivity(
-                            intentFor<MatchDetailActivity>(
-                                MatchDetailActivity.MATCH_ID to event.idEvent,
-                                MatchDetailActivity.HOME_BADGE to event.strHomeTeamBadge,
-                                MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
-                            )
-                        )
+            scheduleViewModel.getNextEventsState(it).observe(this, Observer { state ->
+                when (state) {
+                    is EmptyState -> {
                     }
-                    rv_next_match.adapter = adapter
-                } else {
-                    // show empty view
-                    tv_empty_view.visible()
+                    is LoadingState -> {
+                        progressbar_next_match.visible()
+                        tv_empty_view.invisible()
+                    }
+                    is PopulatedState -> {
+                        progressbar_next_match.invisible()
+                        adapter = MatchesScheduleAdapter(state.data) { event ->
+                            startActivity(
+                                intentFor<MatchDetailActivity>(
+                                    MatchDetailActivity.MATCH_ID to event.idEvent,
+                                    MatchDetailActivity.HOME_BADGE to event.strHomeTeamBadge,
+                                    MatchDetailActivity.AWAY_BADGE to event.strAwayTeamBadge
+                                )
+                            )
+                        }
+                        rv_next_match.adapter = adapter
+                    }
+                    is NoResultState -> {
+                        progressbar_next_match.invisible()
+                        tv_empty_view.visible()
+                    }
                 }
             })
         }

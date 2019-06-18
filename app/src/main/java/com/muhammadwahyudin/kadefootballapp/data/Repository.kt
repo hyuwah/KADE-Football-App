@@ -26,7 +26,7 @@ class Repository(
     private val theSportDbApiService: TheSportDbApiService
 ) : IRepository {
 
-    val TAG = Repository::class.java.simpleName
+    private val TAG = Repository::class.java.simpleName
 
     override fun getLeagues(resources: Resources): List<League> {
         val leagues = arrayListOf<League>()
@@ -141,7 +141,7 @@ class Repository(
     }
 
     private fun updateEventsWithTeamBadge(
-        it: EventsRes, // Cuman beda serialized name doang, bad api response design
+        it: EventsRes, // Cuman beda serialized name doang v. EventWithImage, bad api response design
         tempData: ArrayList<EventWithImage>,
         data: MutableLiveData<List<EventWithImage>>
     ) {

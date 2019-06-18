@@ -79,6 +79,7 @@ dependencies {
 
     implementation 'com.facebook.stetho:stetho:1.5.1'
 
+    // Test
     implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.koin:koin-test:$koin_version"

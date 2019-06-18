@@ -2,6 +2,7 @@ package com.muhammadwahyudin.kadefootballapp.di
 
 import com.muhammadwahyudin.kadefootballapp.data.IRepository
 import com.muhammadwahyudin.kadefootballapp.data.Repository
+import com.muhammadwahyudin.kadefootballapp.data.local.database
 import com.muhammadwahyudin.kadefootballapp.data.remote.TheSportDbApiService
 import com.muhammadwahyudin.kadefootballapp.views.favoritematch.FavoriteMatchViewModel
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.LeagueDetailViewModel
@@ -18,7 +19,7 @@ val appModule = module {
     single { TheSportDbApiService.create() }
     single { Repository(Schedulers.io(), AndroidSchedulers.mainThread(), get()) as IRepository }
     viewModel { LeagueDetailViewModel(get()) }
-    viewModel { MatchDetailViewModel(get(), get()) }
+    viewModel { MatchDetailViewModel(androidContext().database, get()) }
     viewModel { MatchScheduleViewModel(get()) }
     viewModel { FavoriteMatchViewModel(androidContext(), get()) }
     viewModel { MatchSearchViewModel(get()) }
