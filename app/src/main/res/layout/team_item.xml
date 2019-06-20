@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        app:cardElevation="4dp"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        app:cardCornerRadius="10dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_margin="12dp">
+
+        <ImageView
+                android:id="@+id/iv_badge"
+                android:layout_width="128dp"
+                android:layout_height="128dp" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                android:scaleType="fitCenter"
+                tools:src="@drawable/ic_launcher_background"/>
+
+        <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_badge"
+                android:layout_marginStart="12dp" android:layout_marginEnd="8dp" tools:text="Arsenal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" android:layout_marginTop="8dp"/>
+
+        <TextView
+                android:id="@+id/tv_country"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_name"
+                app:layout_constraintStart_toEndOf="@id/iv_badge"
+                tools:text="England" android:layout_marginStart="12dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+        <TextView
+                android:id="@+id/tv_stadium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_country"
+                app:layout_constraintStart_toEndOf="@id/iv_badge"
+                tools:text="Jalak Harupat" android:layout_marginStart="12dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintBottom_toTopOf="@+id/tv_stadium_location" android:layout_marginTop="8dp"/>
+
+        <TextView
+                android:id="@+id/tv_stadium_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_stadium"
+                app:layout_constraintStart_toEndOf="@id/iv_badge"
+                tools:text="Soreang, Bandung" android:layout_marginStart="12dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

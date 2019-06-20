@@ -46,6 +46,9 @@ interface TheSportDbApiService {
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/lookupteam.php")
     fun getTeamDetail(@Query("id") teamId: String): Single<TeamsRes>
 
+    @GET("api/v1/json/${BuildConfig.TSDB_API_KEY}/lookup_all_teams.php")
+    fun getTeamListByLeagueId(@Query("id") leagueId: String): Single<TeamsRes>
+
     companion object Factory {
         val client = OkHttpClient()
         fun create(): TheSportDbApiService {

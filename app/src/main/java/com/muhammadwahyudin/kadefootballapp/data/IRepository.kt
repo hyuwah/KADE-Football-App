@@ -21,5 +21,5 @@ interface IRepository {
     fun getTeamDetail(teamId: String): MutableLiveData<Team>
     fun getFavoriteEvents(db: DatabaseHelper): List<FavoriteEvent>
     fun updateEventWithTeamBadge(event: EventWithImage): Single<List<String>>
-
+    fun getTeamList(leagueId: String): MutableLiveData<List<Team>>
 }

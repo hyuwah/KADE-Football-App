@@ -26,6 +26,7 @@ class LeagueItemUI : AnkoComponent<ViewGroup> {
             lparams(matchParent, wrapContent) {
                 margin = dip(4)
             }
+            // TODO Should use constraintlayout
             linearLayout {
                 orientation = LinearLayout.HORIZONTAL
                 lparams(matchParent, matchParent)
@@ -33,8 +34,8 @@ class LeagueItemUI : AnkoComponent<ViewGroup> {
                     padding = dip(8)
                     id = R.id.league_item_image
                     adjustViewBounds = true
-                    scaleType = ImageView.ScaleType.CENTER_CROP
-                }.lparams(height = 200)
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                }.lparams(height = 150)
 
                 textView("League Name") {
                     padding = dip(8)

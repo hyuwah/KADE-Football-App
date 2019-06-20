@@ -11,6 +11,7 @@ import com.muhammadwahyudin.kadefootballapp.data.model.League
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.LastMatchFragment
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.NextMatchFragment
+import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.teamlist.TeamListFragment
 import com.muhammadwahyudin.kadefootballapp.views.matchsearch.MatchSearchActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_league_detail.*
@@ -63,6 +64,10 @@ class LeagueDetailActivity : AppCompatActivity() {
             addFragment(
                 NextMatchFragment.newInstance(league?.idLeague),
                 "Next Match"
+            )
+            addFragment(
+                TeamListFragment.newInstance(league?.idLeague),
+                "Teams"
             )
         }
         viewpager.adapter = vpAdapter

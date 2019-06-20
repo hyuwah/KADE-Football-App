@@ -172,4 +172,21 @@ class Repository(
                 }.subscribe()
         }
     }
+
+    override fun getTeamList(leagueId: String): MutableLiveData<List<Team>> {
+        val data = MutableLiveData<List<Team>>()
+        theSportDbApiService.getTeamListByLeagueId(leagueId)
+            .subscribeOn(bgScheduler)
+            .observeOn(mainScheduler)
+            .doOnSuccess {
+                if (!it.teams.isNullOrEmpty())
+                    data.postValue(it.teams)
+            }
+            .doOnError {
+
+            }
+            .subscribe()
+        return data
+    }
+
 }

@@ -32,6 +32,10 @@ class LeaguesActivity : AppCompatActivity() {
 
         verticalLayout {
             background = ColorDrawable(Color.parseColor("#efefef"))
+
+            // TODO ganti jadi it's own favorites activity
+            // Viewpager list favs match & teams
+            // Favorite Match
             cardView {
                 foreground = with(TypedValue()) {
                     context.theme.resolveAttribute(R.attr.selectableItemBackground, this, true)
@@ -56,8 +60,44 @@ class LeaguesActivity : AppCompatActivity() {
                     }.lparams(matchParent, matchParent)
                 }
             }.lparams(matchParent, wrapContent) {
-                margin = dip(12)
+                rightMargin = dip(12)
+                leftMargin = dip(12)
+                topMargin = dip(8)
+                bottomMargin = dip(4)
             }
+
+            // Favorite Team
+            cardView {
+                foreground = with(TypedValue()) {
+                    context.theme.resolveAttribute(R.attr.selectableItemBackground, this, true)
+                    ContextCompat.getDrawable(context, resourceId)
+                }
+                isClickable = true
+                radius = dip(8).toFloat()
+                onClick { startActivity(intentFor<FavoriteMatchActivity>()) }
+                frameLayout {
+                    imageView {
+                        setImageResource(R.drawable.favorite_match_bg)
+                        scaleType = ImageView.ScaleType.CENTER_CROP
+                    }.lparams(matchParent, dip(64))
+                    imageView {
+                        setImageResource(R.drawable.appbar_scrim)
+                    }.lparams(matchParent, dip(64))
+                    textView("Favorite Teams") {
+                        textAlignment = View.TEXT_ALIGNMENT_CENTER
+                        textSize = 24f
+                        textColor = Color.WHITE
+                        gravity = Gravity.CENTER
+                    }.lparams(matchParent, matchParent)
+                }
+            }.lparams(matchParent, wrapContent) {
+                rightMargin = dip(12)
+                leftMargin = dip(12)
+                topMargin = dip(4)
+                bottomMargin = dip(8)
+            }
+
+            // League List
             recyclerView {
                 id = R.id.rv_leagues
                 padding = dip(8)
