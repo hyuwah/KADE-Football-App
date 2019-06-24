@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.muhammadwahyudin.kadefootballapp.app.DB_OPS_STATE
 import com.muhammadwahyudin.kadefootballapp.app.toReadableTimeWIB
 import com.muhammadwahyudin.kadefootballapp.data.IRepository
 import com.muhammadwahyudin.kadefootballapp.data.local.DatabaseHelper
@@ -16,14 +17,8 @@ import org.jetbrains.anko.db.select
 
 class MatchDetailViewModel(private val db: DatabaseHelper, private val repository: IRepository) : ViewModel() {
 
-    enum class DB_OPS_STATE {
-        INSERT_SUCCESS,
-        REMOVE_SUCCESS,
-        ERROR
-    }
-
     private var mEventWithImage = MutableLiveData<EventWithImage>()
-    private var isFavorite = MutableLiveData<Boolean>(false)
+    private var isFavorite = MutableLiveData(false)
     private var db_ops_state = MutableLiveData<DB_OPS_STATE>()
 
     fun loadMatchDetail(id: String): LiveData<EventWithImage> {

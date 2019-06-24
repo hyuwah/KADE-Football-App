@@ -4,6 +4,12 @@ import android.view.View
 import java.text.SimpleDateFormat
 import java.util.*
 
+enum class DB_OPS_STATE {
+    INSERT_SUCCESS,
+    REMOVE_SUCCESS,
+    ERROR
+}
+
 fun View.visible() {
     visibility = View.VISIBLE
 }

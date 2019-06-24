@@ -8,9 +8,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.muhammadwahyudin.kadefootballapp.R
+import com.muhammadwahyudin.kadefootballapp.app.DB_OPS_STATE.*
 import com.muhammadwahyudin.kadefootballapp.app.toReadableTimeWIB
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
-import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailViewModel.DB_OPS_STATE.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import org.jetbrains.anko.design.snackbar

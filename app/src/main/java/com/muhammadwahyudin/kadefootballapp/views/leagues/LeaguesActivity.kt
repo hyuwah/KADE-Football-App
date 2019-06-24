@@ -34,7 +34,6 @@ class LeaguesActivity : AppCompatActivity() {
         verticalLayout {
             background = ColorDrawable(Color.parseColor("#efefef"))
 
-            // TODO ganti jadi it's own favorites activity
             // Favorites
             cardView {
                 foreground = with(TypedValue()) {
