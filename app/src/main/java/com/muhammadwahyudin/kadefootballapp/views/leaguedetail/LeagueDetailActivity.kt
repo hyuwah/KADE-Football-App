@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.model.League
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
+import com.muhammadwahyudin.kadefootballapp.views._utils.ViewPagerAdapter
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.LastMatchFragment
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.NextMatchFragment
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.teamlist.TeamListFragment

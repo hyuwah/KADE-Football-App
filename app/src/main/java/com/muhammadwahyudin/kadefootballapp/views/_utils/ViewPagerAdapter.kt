@@ -1,4 +1,4 @@
-package com.muhammadwahyudin.kadefootballapp.views.leaguedetail
+package com.muhammadwahyudin.kadefootballapp.views._utils
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

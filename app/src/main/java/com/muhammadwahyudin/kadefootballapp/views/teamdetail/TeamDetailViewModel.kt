@@ -1,4 +1,6 @@
 package com.muhammadwahyudin.kadefootballapp.views.teamdetail
 
-class TeamDetailViewModel {
+import androidx.lifecycle.ViewModel
+
+class TeamDetailViewModel() : ViewModel() {
 }

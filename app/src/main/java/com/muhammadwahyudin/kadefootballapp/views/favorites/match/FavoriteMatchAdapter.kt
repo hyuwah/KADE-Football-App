@@ -1,4 +1,4 @@
-package com.muhammadwahyudin.kadefootballapp.views.favoritematch
+package com.muhammadwahyudin.kadefootballapp.views.favorites.match
 
 import android.view.LayoutInflater
 import android.view.View

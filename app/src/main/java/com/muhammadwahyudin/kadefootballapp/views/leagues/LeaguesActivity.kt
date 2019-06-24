@@ -7,12 +7,13 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.IRepository
-import com.muhammadwahyudin.kadefootballapp.views.favoritematch.FavoriteMatchActivity
+import com.muhammadwahyudin.kadefootballapp.views.favorites.FavoritesActivity
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.LeagueDetailActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
@@ -34,8 +35,7 @@ class LeaguesActivity : AppCompatActivity() {
             background = ColorDrawable(Color.parseColor("#efefef"))
 
             // TODO ganti jadi it's own favorites activity
-            // Viewpager list favs match & teams
-            // Favorite Match
+            // Favorites
             cardView {
                 foreground = with(TypedValue()) {
                     context.theme.resolveAttribute(R.attr.selectableItemBackground, this, true)
@@ -43,7 +43,7 @@ class LeaguesActivity : AppCompatActivity() {
                 }
                 isClickable = true
                 radius = dip(8).toFloat()
-                onClick { startActivity(intentFor<FavoriteMatchActivity>()) }
+                onClick { startActivity(intentFor<FavoritesActivity>()) }
                 frameLayout {
                     imageView {
                         setImageResource(R.drawable.favorite_match_bg)
@@ -52,38 +52,7 @@ class LeaguesActivity : AppCompatActivity() {
                     imageView {
                         setImageResource(R.drawable.appbar_scrim)
                     }.lparams(matchParent, dip(64))
-                    textView("Favorite Matches") {
-                        textAlignment = View.TEXT_ALIGNMENT_CENTER
-                        textSize = 24f
-                        textColor = Color.WHITE
-                        gravity = Gravity.CENTER
-                    }.lparams(matchParent, matchParent)
-                }
-            }.lparams(matchParent, wrapContent) {
-                rightMargin = dip(12)
-                leftMargin = dip(12)
-                topMargin = dip(8)
-                bottomMargin = dip(4)
-            }
-
-            // Favorite Team
-            cardView {
-                foreground = with(TypedValue()) {
-                    context.theme.resolveAttribute(R.attr.selectableItemBackground, this, true)
-                    ContextCompat.getDrawable(context, resourceId)
-                }
-                isClickable = true
-                radius = dip(8).toFloat()
-                onClick { startActivity(intentFor<FavoriteMatchActivity>()) }
-                frameLayout {
-                    imageView {
-                        setImageResource(R.drawable.favorite_match_bg)
-                        scaleType = ImageView.ScaleType.CENTER_CROP
-                    }.lparams(matchParent, dip(64))
-                    imageView {
-                        setImageResource(R.drawable.appbar_scrim)
-                    }.lparams(matchParent, dip(64))
-                    textView("Favorite Teams") {
+                    textView("Favorite Matches & Teams") {
                         textAlignment = View.TEXT_ALIGNMENT_CENTER
                         textSize = 24f
                         textColor = Color.WHITE
@@ -111,6 +80,17 @@ class LeaguesActivity : AppCompatActivity() {
                 }
                 layoutManager = GridLayoutManager(context, 2)
             }
+        }
+    }
+
+    private var exitToast: Toast? = null
+    override fun onBackPressed() {
+        if (exitToast == null || exitToast!!.view == null || exitToast!!.view.windowToken == null) {
+            exitToast = Toast.makeText(this, "Press again to exit", Toast.LENGTH_LONG)
+            exitToast!!.show()
+        } else {
+            exitToast!!.cancel()
+            super.onBackPressed()
         }
     }
 

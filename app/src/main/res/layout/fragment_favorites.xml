@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#efefef"
-        tools:context=".views.favoritematch.FavoriteMatchActivity">
+        tools:context=".views.favorites.FavoritesActivity">
 
     <TextView
             android:text="@string/no_favorited_match"

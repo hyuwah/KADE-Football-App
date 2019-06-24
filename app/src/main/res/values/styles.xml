@@ -14,4 +14,61 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CollapsingToolbarLayoutDefault">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">300dp</item>
+        <item name="contentScrim">?attr/colorPrimary</item>
+        <item name="expandedTitleTextAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="expandedTitleGravity">center_horizontal|bottom</item>
+        <item name="layout_scrollFlags">scroll|exitUntilCollapsed</item>
+    </style>
+
+    <style name="ImageViewDetailBanner">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="layout_collapseMode">parallax</item>
+    </style>
+
+    <style name="ImageViewDetailBanner.Scrim">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:src">@drawable/appbar_scrim</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <style name="CircleImageViewDetail">
+        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_width">96dp</item>
+        <item name="civ_border_width">2dp</item>
+        <item name="civ_border_color">#ffffff</item>
+        <item name="android:layout_marginTop">?attr/actionBarSize</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="TextDetailMain">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="TextDetailSecondary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="ToolbarDetail">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="navigationIcon">@drawable/ic_arrow_back_24dp</item>
+        <item name="layout_scrollFlags">scroll|enterAlwaysCollapsed</item>
+        <item name="layout_collapseMode">pin</item>
+    </style>
+
 </resources>

@@ -12,11 +12,16 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".views.teamdetail.TeamDetailActivity">
+        <activity android:name=".views.playerdetail.PlayerDetailActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".views.favoritematch.FavoriteMatchActivity"
+                android:name=".views.favorites.FavoritesActivity"
                 android:parentActivityName=".views.leagues.LeaguesActivity">
+        </activity>
+        <activity
+                android:name=".views.teamdetail.TeamDetailActivity"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
                 android:name=".views.matchsearch.MatchSearchActivity"

@@ -63,7 +63,7 @@ class TeamListFragment : Fragment() {
                         adapter = TeamListAdapter(state.data) { team ->
                             startActivity(
                                 intentFor<TeamDetailActivity>(
-
+                                    TeamDetailActivity.TEAM_PARCEL to team
                                 )
                             )
                         }

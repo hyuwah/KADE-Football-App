@@ -5,10 +5,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.local.DatabaseHelper
-import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
-import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
-import com.muhammadwahyudin.kadefootballapp.data.model.League
-import com.muhammadwahyudin.kadefootballapp.data.model.Team
+import com.muhammadwahyudin.kadefootballapp.data.model.*
 import com.muhammadwahyudin.kadefootballapp.data.remote.TheSportDbApiService
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.EventsRes
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
@@ -181,6 +178,61 @@ class Repository(
             .doOnSuccess {
                 if (!it.teams.isNullOrEmpty())
                     data.postValue(it.teams)
+            }
+            .doOnError {
+
+            }
+            .subscribe()
+        return data
+    }
+
+    override fun getFavoriteTeams(db: DatabaseHelper): List<Team> {
+        return db.use {
+            val result = select(Team.TABLE_NAME)
+            return@use result.parseList(classParser())
+        }
+    }
+
+    override fun getPlayerList(teamId: String): MutableLiveData<List<Player>> {
+        val data = MutableLiveData<List<Player>>()
+        theSportDbApiService.getPlayerList(teamId)
+            .subscribeOn(bgScheduler)
+            .observeOn(mainScheduler)
+            .doOnSuccess {
+                if (!it.player.isNullOrEmpty())
+                    data.postValue(it.player)
+            }
+            .doOnError {
+
+            }
+            .subscribe()
+        return data
+    }
+
+    override fun getPlayerDetail(playerId: String): MutableLiveData<Player> {
+        val data = MutableLiveData<Player>()
+        theSportDbApiService.getPlayerDetail(playerId)
+            .subscribeOn(bgScheduler)
+            .observeOn(mainScheduler)
+            .doOnSuccess {
+                if (!it.players.isNullOrEmpty())
+                    data.postValue(it.players[0])
+            }
+            .doOnError {
+
+            }
+            .subscribe()
+        return data
+    }
+
+    override fun getLeagueStandings(leagueId: String): MutableLiveData<List<Standing>> {
+        val data = MutableLiveData<List<Standing>>()
+        theSportDbApiService.getLeagueStandings(leagueId)
+            .observeOn(bgScheduler)
+            .subscribeOn(mainScheduler)
+            .doOnSuccess {
+                if (!it.table.isNullOrEmpty())
+                    data.postValue(it.table)
             }
             .doOnError {
 

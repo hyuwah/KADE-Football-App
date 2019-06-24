@@ -106,9 +106,8 @@
                     android:id="@+id/viewpager"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"/>
 
-            </androidx.viewpager.widget.ViewPager>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

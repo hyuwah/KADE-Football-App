@@ -129,7 +129,7 @@ class MatchDetailActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.match_detail_menu, menu)
+        menuInflater.inflate(R.menu.detail_favorite_menu, menu)
         favoriteBtn = menu?.findItem(R.id.favorite_action)
         favoriteBtn?.isVisible = false
 

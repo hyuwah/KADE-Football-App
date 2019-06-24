@@ -22,6 +22,11 @@ interface TheSportDbApiService {
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/lookupleague.php")
     fun getLeagueDetail(@Query("id") leagueId: Int): Single<LeagueDetailRes>
 
+    // League standings (klasemen) endpoint {leagueId}
+    // https://www.thesportsdb.com/api/v1/json/1/lookuptable.php?l=4387
+    @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/lookuptable.php")
+    fun getLeagueStandings(@Query("l") leagueId: String): Single<LeagueStandingsRes>
+
     // Match in League Endpoint {leagueId}
     // Next 15 https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4328
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/eventsnextleague.php")
@@ -46,8 +51,21 @@ interface TheSportDbApiService {
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/lookupteam.php")
     fun getTeamDetail(@Query("id") teamId: String): Single<TeamsRes>
 
+    // Team List endpoint {leagueId}
+    //
     @GET("api/v1/json/${BuildConfig.TSDB_API_KEY}/lookup_all_teams.php")
     fun getTeamListByLeagueId(@Query("id") leagueId: String): Single<TeamsRes>
+
+    // Player List endpoint {teamId}
+    // https://www.thesportsdb.com/api/v1/json/1/lookup_all_players.php?id={idTeam}
+    @GET("api/v1/json/${BuildConfig.TSDB_API_KEY}/lookup_all_players.php")
+    fun getPlayerList(@Query("id") teamId: String): Single<PlayerListRes>
+
+    // Player Detail endpoint {playerId}
+    // https://www.thesportsdb.com/api/v1/json/1/lookupplayer.php?id=34145937
+    @GET("api/v1/json/${BuildConfig.TSDB_API_KEY}/lookupplayer.php")
+    fun getPlayerDetail(@Query("id") playerId: String): Single<PlayerDetailRes>
+
 
     companion object Factory {
         val client = OkHttpClient()

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:fillViewport="true"
+        tools:context=".views.teamdetail.TeamDetailFragment">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <ProgressBar
+                android:layout_marginTop="-7dp"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:indeterminate="true"
+                android:id="@+id/progressbar_team_info"
+                android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <ImageView
+                android:visibility="gone"
+                android:layout_margin="8dp"
+                android:src="@mipmap/ic_launcher"
+                android:scaleType="fitCenter"
+                android:id="@+id/iv_jersey"
+                android:layout_width="96dp"
+                android:layout_gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:visibility="gone"
+                android:text="@string/formed_year"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/tv_formed_year"/>
+
+        <TextView
+                android:visibility="gone"
+                android:padding="12dp"
+                android:text="@string/description"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/tv_team_desc"/>
+
+        <ImageView
+                android:visibility="gone"
+                android:src="@mipmap/ic_launcher"
+                android:adjustViewBounds="true"
+                android:id="@+id/iv_banner"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
