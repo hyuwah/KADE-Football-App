@@ -4,6 +4,7 @@ import com.muhammadwahyudin.kadefootballapp.BuildConfig
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.*
 import io.reactivex.Single
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -31,6 +32,7 @@ interface TheSportDbApiService {
     // Next 15 https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4328
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/eventsnextleague.php")
     fun getNextMatchByLeagueId(@Query("id") leagueId: String): Single<EventsRes>
+
     // Last 15 https://www.thesportsdb.com/api/v1/json/1/eventspastleague.php?id=4328
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/eventspastleague.php")
     fun getLastMatchByLeagueId(@Query("id") leagueId: String): Single<EventsRes>
@@ -68,7 +70,12 @@ interface TheSportDbApiService {
 
 
     companion object Factory {
-        val client = OkHttpClient()
+        val client = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+
         fun create(): TheSportDbApiService {
             val retrofit = Retrofit.Builder()
                 .client(client)

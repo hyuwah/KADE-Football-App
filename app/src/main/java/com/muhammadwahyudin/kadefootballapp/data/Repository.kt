@@ -228,8 +228,8 @@ class Repository(
     override fun getLeagueStandings(leagueId: String): MutableLiveData<List<Standing>> {
         val data = MutableLiveData<List<Standing>>()
         theSportDbApiService.getLeagueStandings(leagueId)
-            .observeOn(bgScheduler)
-            .subscribeOn(mainScheduler)
+            .subscribeOn(bgScheduler)
+            .observeOn(mainScheduler)
             .doOnSuccess {
                 if (!it.table.isNullOrEmpty())
                     data.postValue(it.table)

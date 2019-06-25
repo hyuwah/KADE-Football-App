@@ -8,6 +8,7 @@ import com.muhammadwahyudin.kadefootballapp.views.favorites.match.FavoriteMatchV
 import com.muhammadwahyudin.kadefootballapp.views.favorites.teams.FavoriteTeamViewModel
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.LeagueDetailViewModel
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.MatchScheduleViewModel
+import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.standings.StandingsViewModel
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.teamlist.TeamListViewModel
 import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailViewModel
 import com.muhammadwahyudin.kadefootballapp.views.matchsearch.MatchSearchViewModel
@@ -33,4 +34,5 @@ val appModule = module {
     viewModel { TeamDetailViewModel(androidContext().database, get()) }
     viewModel { PlayerListViewModel(get()) }
     viewModel { PlayerDetailViewModel(get()) }
+    viewModel { StandingsViewModel(get()) }
 }

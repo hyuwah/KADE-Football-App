@@ -12,6 +12,7 @@ import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
 import com.muhammadwahyudin.kadefootballapp.views._utils.ViewPagerAdapter
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.LastMatchFragment
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.NextMatchFragment
+import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.standings.StandingsFragment
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.teamlist.TeamListFragment
 import com.muhammadwahyudin.kadefootballapp.views.matchsearch.MatchSearchActivity
 import com.squareup.picasso.Picasso
@@ -59,12 +60,16 @@ class LeagueDetailActivity : AppCompatActivity() {
                 "Info"
             )
             addFragment(
-                LastMatchFragment.newInstance(league?.idLeague),
-                "Last Match"
+                StandingsFragment.newInstance(league?.idLeague),
+                "Standings"
             )
             addFragment(
                 NextMatchFragment.newInstance(league?.idLeague),
                 "Next Match"
+            )
+            addFragment(
+                LastMatchFragment.newInstance(league?.idLeague),
+                "Last Match"
             )
             addFragment(
                 TeamListFragment.newInstance(league?.idLeague),
