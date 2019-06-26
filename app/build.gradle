@@ -81,8 +81,8 @@ dependencies {
 
     implementation 'com.facebook.stetho:stetho:1.5.1'
 
-    // Table View
-    implementation 'com.evrencoskun.library:tableview:0.8.8'
+    // Switch
+    implementation 'us.belka:androidtoggleswitch:1.2.2'
 
     // Test
     implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'

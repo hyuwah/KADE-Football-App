@@ -11,8 +11,7 @@ import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.Mat
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.standings.StandingsViewModel
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.teamlist.TeamListViewModel
 import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailViewModel
-import com.muhammadwahyudin.kadefootballapp.views.matchsearch.MatchSearchViewModel
-import com.muhammadwahyudin.kadefootballapp.views.playerdetail.PlayerDetailViewModel
+import com.muhammadwahyudin.kadefootballapp.views.search.SearchViewModel
 import com.muhammadwahyudin.kadefootballapp.views.teamdetail.TeamDetailViewModel
 import com.muhammadwahyudin.kadefootballapp.views.teamdetail.playerlist.PlayerListViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -29,10 +28,9 @@ val appModule = module {
     viewModel { MatchScheduleViewModel(get()) }
     viewModel { FavoriteMatchViewModel(androidContext().database, get()) }
     viewModel { FavoriteTeamViewModel(androidContext().database, get()) }
-    viewModel { MatchSearchViewModel(get()) }
     viewModel { TeamListViewModel(get()) }
     viewModel { TeamDetailViewModel(androidContext().database, get()) }
     viewModel { PlayerListViewModel(get()) }
-    viewModel { PlayerDetailViewModel(get()) }
     viewModel { StandingsViewModel(get()) }
+    viewModel { SearchViewModel(get()) }
 }

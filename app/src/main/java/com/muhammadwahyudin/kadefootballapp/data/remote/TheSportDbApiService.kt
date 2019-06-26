@@ -48,6 +48,11 @@ interface TheSportDbApiService {
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/searchevents.php")
     fun searchMatches(@Query("e") query: String): Single<SearchEventsRes>
 
+    // Search team endpoint {stringQuery}
+    // https://www.thesportsdb.com/api/v1/json/1/searchteams.php?t=Arsenal
+    @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/searchteams.php")
+    fun searchTeams(@Query("t") query: String): Single<TeamsRes>
+
     // Team Detail endpoint {teamId}
     // https://www.thesportsdb.com/api/v1/json/1/lookupteam.php?id=133604
     @GET("/api/v1/json/${BuildConfig.TSDB_API_KEY}/lookupteam.php")

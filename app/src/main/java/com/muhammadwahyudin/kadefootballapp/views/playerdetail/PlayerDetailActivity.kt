@@ -7,16 +7,13 @@ import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.model.Player
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_player_detail.*
-import org.koin.android.viewmodel.ext.android.viewModel
 
 class PlayerDetailActivity : AppCompatActivity() {
 
     companion object {
-        const val PLAYER_ID = "player_id"
         const val PLAYER_PARCEL = "player_parcel"
     }
 
-    private val viewModel: PlayerDetailViewModel by viewModel()
     private var player: Player? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +33,10 @@ class PlayerDetailActivity : AppCompatActivity() {
             tv_player_name.text = "${it.strNumber ?: "-"} | " + it.strPosition
             tv_country.text = it.strNationality
             tv_player_desc.text = it.strDescriptionEN
+            tv_dob.text = "D.O.B: ${it.strBirthLocation}, ${it.dateBorn}"
+            tv_wage.text = "Wage : ${if (it.strWage.isNullOrEmpty()) "-" else it.strWage}"
+            tv_height_weight.text =
+                "Height : ${it.strHeight}\tWeight: ${if (it.strWeight.isNullOrEmpty()) "-" else it.strWeight}"
         }
 
 

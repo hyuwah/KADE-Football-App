@@ -6,6 +6,7 @@ import com.muhammadwahyudin.kadefootballapp.data.local.DatabaseHelper
 import com.muhammadwahyudin.kadefootballapp.data.model.*
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.SearchEventsRes
+import com.muhammadwahyudin.kadefootballapp.data.remote.response.TeamsRes
 import io.reactivex.Single
 
 interface IRepository {
@@ -15,6 +16,7 @@ interface IRepository {
     fun getNextMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>>
     fun getLastMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>>
     fun searchMatches(query: String): Single<SearchEventsRes>
+    fun searchTeams(query: String): Single<TeamsRes>
     fun getMatchDetail(eventId: String): MutableLiveData<EventWithImage>
     fun getTeamDetail(teamId: String): MutableLiveData<Team>
     fun getFavoriteEvents(db: DatabaseHelper): List<FavoriteEvent>

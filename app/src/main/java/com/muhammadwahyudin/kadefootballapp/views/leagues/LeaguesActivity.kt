@@ -5,6 +5,8 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -15,6 +17,7 @@ import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.IRepository
 import com.muhammadwahyudin.kadefootballapp.views.favorites.FavoritesActivity
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.LeagueDetailActivity
+import com.muhammadwahyudin.kadefootballapp.views.search.SearchActivity
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.jetbrains.anko.recyclerview.v7.recyclerView
@@ -90,6 +93,22 @@ class LeaguesActivity : AppCompatActivity() {
         } else {
             exitToast!!.cancel()
             super.onBackPressed()
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.league_detail_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.league_event_search_menu -> {
+                startActivity(intentFor<SearchActivity>())
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

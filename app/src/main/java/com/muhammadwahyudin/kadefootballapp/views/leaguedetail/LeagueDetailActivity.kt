@@ -14,7 +14,7 @@ import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.Las
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.NextMatchFragment
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.standings.StandingsFragment
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.teamlist.TeamListFragment
-import com.muhammadwahyudin.kadefootballapp.views.matchsearch.MatchSearchActivity
+import com.muhammadwahyudin.kadefootballapp.views.search.SearchActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_league_detail.*
 import org.jetbrains.anko.intentFor
@@ -87,7 +87,7 @@ class LeagueDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.league_event_search_menu -> {
-                startActivity(intentFor<MatchSearchActivity>())
+                startActivity(intentFor<SearchActivity>())
                 true
             }
             else -> {

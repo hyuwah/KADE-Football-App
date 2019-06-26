@@ -112,7 +112,7 @@ class MatchSearchTest {
         // Assertion for search recyclerview
         onView(
             allOf(
-                withId(R.id.rv_match_search),
+                withId(R.id.rv_search),
                 isDisplayed(),
                 hasMinimumChildCount(1)
             )

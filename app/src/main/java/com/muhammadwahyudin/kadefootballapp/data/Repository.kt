@@ -91,6 +91,10 @@ class Repository(
         return theSportDbApiService.searchMatches(query)
     }
 
+    override fun searchTeams(query: String): Single<TeamsRes> {
+        return theSportDbApiService.searchTeams(query)
+    }
+
     override fun getMatchDetail(eventId: String): MutableLiveData<EventWithImage> {
         val data = MutableLiveData<EventWithImage>()
         theSportDbApiService.getMatchDetailByEventId(eventId)

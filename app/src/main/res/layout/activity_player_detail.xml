@@ -72,6 +72,24 @@
                 android:layout_height="wrap_content">
 
             <TextView
+                    android:id="@+id/tv_dob"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/tv_height_weight"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/tv_wage"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
                     android:id="@+id/tv_player_desc"
                     android:layout_marginBottom="?attr/actionBarSize"
                     android:layout_width="match_parent"
