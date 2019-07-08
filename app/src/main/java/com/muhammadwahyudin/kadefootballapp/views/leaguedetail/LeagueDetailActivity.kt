@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.data.model.League
+import com.muhammadwahyudin.kadefootballapp.data.model.LoadingState
+import com.muhammadwahyudin.kadefootballapp.data.model.PopulatedState
 import com.muhammadwahyudin.kadefootballapp.data.remote.response.LeagueDetailRes
 import com.muhammadwahyudin.kadefootballapp.views._utils.ViewPagerAdapter
 import com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule.LastMatchFragment
@@ -41,12 +43,18 @@ class LeagueDetailActivity : AppCompatActivity() {
         ct_layout.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
 
         mViewModel.getLeagueDetail(leagueModel.id).observe(this,
-            Observer<LeagueDetailRes.League> { league ->
-                Picasso.get().load(league?.strFanart1).into(iv_league_detail_banner)
-                Picasso.get().load(league?.strBadge).into(civ_league_detail)
-                tv_title_league.text = league?.strLeagueAlternate
-                tv_country.text = league?.strCountry
-                initViewPagerFragment(league)
+            Observer { state ->
+                when (state) {
+                    is LoadingState -> {
+                    }
+                    is PopulatedState -> {
+                        Picasso.get().load(state.data.strFanart1).into(iv_league_detail_banner)
+                        Picasso.get().load(state.data.strBadge).into(civ_league_detail)
+                        tv_title_league.text = state.data.strLeagueAlternate
+                        tv_country.text = state.data.strCountry
+                        initViewPagerFragment(state.data)
+                    }
+                }
             })
 
         tablayout.setupWithViewPager(viewpager)

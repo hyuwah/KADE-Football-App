@@ -14,8 +14,10 @@ import com.muhammadwahyudin.kadefootballapp.data.remote.response.TeamsRes
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.select
+import retrofit2.Response
 
 class Repository(
     private val bgScheduler: Scheduler,
@@ -38,53 +40,70 @@ class Repository(
         return leagues
     }
 
-    override fun getLeagueDetail(id: Int): MutableLiveData<LeagueDetailRes.League> {
-        val data = MutableLiveData<LeagueDetailRes.League>()
-        theSportDbApiService.getLeagueDetail(id)
+    override fun getLeagueDetail(id: Int): Single<LeagueDetailRes.League> {
+        return theSportDbApiService.getLeagueDetail(id)
             .subscribeOn(bgScheduler)
             .observeOn(mainScheduler)
             .map {
-                if (!it.leagues.isNullOrEmpty())
-                    it.leagues[0]
+                if (it.body()?.leagues != null && !it.body()?.leagues.isNullOrEmpty())
+                    it.body()!!.leagues[0]
                 else
                     LeagueDetailRes.League() // Return Empty LeagueDetail data if no data from network
             }
-            .doOnSuccess {
-                data.postValue(it)
-            }.doOnError {
-                Log.e(TAG, "Network exception for league id: $id", it)
-            }.subscribe()
-        return data
     }
 
-    override fun getNextMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>> {
-        val tempData = arrayListOf<EventWithImage>()
-        val data = MutableLiveData<List<EventWithImage>>()
-        theSportDbApiService.getNextMatchByLeagueId(leagueId)
+    override fun getNextMatchByLeagueId(leagueId: String): Single<List<EventWithImage>> {
+        return theSportDbApiService.getNextMatchByLeagueId(leagueId)
             .subscribeOn(bgScheduler)
             .observeOn(mainScheduler)
-            .doOnSuccess {
-                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempData, data)
-                else data.postValue(listOf())
-            }.doOnError {
-                data.postValue(listOf())
-            }.subscribe()
-        return data
+            .flatMap {
+                if (it.body()?.events != null) {
+                    Single.just(it)
+                        .map { response ->
+                            response.body()?.events
+                        }
+                        .flattenAsObservable { t -> t }
+                        .flatMapSingle { match ->
+                            updateEventWithTeamBadge(match)
+                                .flatMap { t ->
+                                    match.strAwayTeamBadge = t[0]
+                                    match.strHomeTeamBadge = t[1]
+                                    Single.just(match)
+                                }
+                                .subscribeOn(Schedulers.io())
+                        }
+                        .toList()
+                } else {
+                    Single.just(emptyList())
+                }
+            }
     }
 
-    override fun getLastMatchByLeagueId(leagueId: String): MutableLiveData<List<EventWithImage>> {
-        val tempData = arrayListOf<EventWithImage>()
-        val data = MutableLiveData<List<EventWithImage>>()
-        theSportDbApiService.getLastMatchByLeagueId(leagueId)
+    override fun getLastMatchByLeagueId(leagueId: String): Single<List<EventWithImage>> {
+        return theSportDbApiService.getLastMatchByLeagueId(leagueId)
             .subscribeOn(bgScheduler)
             .observeOn(mainScheduler)
-            .doOnSuccess {
-                if (!it.events.isNullOrEmpty()) updateEventsWithTeamBadge(it, tempData, data)
-                else data.postValue(listOf())
-            }.doOnError {
-                data.postValue(listOf())
-            }.subscribe()
-        return data
+            .flatMap {
+                if (it.body()?.events != null) {
+                    Single.just(it)
+                        .map { response ->
+                            response.body()?.events
+                        }
+                        .flattenAsObservable { t -> t }
+                        .flatMapSingle { match ->
+                            updateEventWithTeamBadge(match)
+                                .flatMap { t ->
+                                    match.strAwayTeamBadge = t[0]
+                                    match.strHomeTeamBadge = t[1]
+                                    Single.just(match)
+                                }
+                                .subscribeOn(Schedulers.io())
+                        }
+                        .toList()
+                } else {
+                    Single.just(emptyList())
+                }
+            }
     }
 
     override fun searchMatches(query: String): Single<SearchEventsRes> {
@@ -95,30 +114,23 @@ class Repository(
         return theSportDbApiService.searchTeams(query)
     }
 
-    override fun getMatchDetail(eventId: String): MutableLiveData<EventWithImage> {
-        val data = MutableLiveData<EventWithImage>()
-        theSportDbApiService.getMatchDetailByEventId(eventId)
+    override fun getMatchDetail(eventId: String): Single<EventWithImage?> {
+        return theSportDbApiService.getMatchDetailByEventId(eventId)
             .subscribeOn(bgScheduler)
             .observeOn(mainScheduler)
-            .doOnSuccess {
-                if (!it.events.isNullOrEmpty()) data.postValue(it.events[0])
-            }.doOnError {
-                Log.e(TAG, "Network exception for event id: $eventId", it)
-            }.subscribe()
-        return data
+            .map {
+                if (it.body() != null && it.body()?.events!!.isNotEmpty()) it.body()!!.events?.get(0) else null
+            }
     }
 
-    override fun getTeamDetail(teamId: String): MutableLiveData<Team> {
-        val data = MutableLiveData<Team>()
-        theSportDbApiService.getTeamDetail(teamId)
+    override fun getTeamDetail(teamId: String): Single<Team> {
+        return theSportDbApiService.getTeamDetail(teamId)
             .subscribeOn(bgScheduler)
             .observeOn(mainScheduler)
-            .doOnSuccess {
-                if (!it.teams.isNullOrEmpty()) data.postValue(it.teams[0])
-            }.doOnError {
-                Log.e(TAG, "Network exception for team id: $teamId", it)
-            }.subscribe()
-        return data
+            .map {
+                if (it.body() != null) it.body()!!.teams[0]
+                else null
+            }
     }
 
     override fun getFavoriteEvents(db: DatabaseHelper): List<FavoriteEvent> {
@@ -132,10 +144,10 @@ class Repository(
         return Single.zip(
             theSportDbApiService.getTeamDetail(event.idAwayTeam),
             theSportDbApiService.getTeamDetail(event.idHomeTeam),
-            BiFunction<TeamsRes, TeamsRes, List<String>> { awayRes, homeRes ->
+            BiFunction<Response<TeamsRes>, Response<TeamsRes>, List<String>> { awayRes, homeRes ->
                 val teamBadges = arrayListOf<String>()
-                teamBadges.add(awayRes.teams[0].strTeamBadge)
-                teamBadges.add(homeRes.teams[0].strTeamBadge)
+                teamBadges.add(awayRes.body()!!.teams[0].strTeamBadge)
+                teamBadges.add(homeRes.body()!!.teams[0].strTeamBadge)
                 teamBadges.toList()
             }
         )
@@ -147,15 +159,15 @@ class Repository(
         data: MutableLiveData<List<EventWithImage>>
     ) {
         // Kumpulin Team Badge home & away
-        it.events.forEach { event ->
+        it.events?.forEach { event ->
             // https://medium.com/mindorks/how-to-make-complex-requests-simple-with-rxjava-in-kotlin-ccec004c5d10
             Single.zip(
                 theSportDbApiService.getTeamDetail(event.idAwayTeam),
                 theSportDbApiService.getTeamDetail(event.idHomeTeam),
-                BiFunction<TeamsRes, TeamsRes, List<String>> { awayRes, homeRes ->
+                BiFunction<Response<TeamsRes>, Response<TeamsRes>, List<String>> { awayRes, homeRes ->
                     val teamBadges = arrayListOf<String>()
-                    teamBadges.add(awayRes.teams[0].strTeamBadge)
-                    teamBadges.add(homeRes.teams[0].strTeamBadge)
+                    teamBadges.add(awayRes.body()!!.teams[0].strTeamBadge)
+                    teamBadges.add(homeRes.body()!!.teams[0].strTeamBadge)
                     teamBadges.toList()
                 })
                 .subscribeOn(bgScheduler)
@@ -174,20 +186,14 @@ class Repository(
         }
     }
 
-    override fun getTeamList(leagueId: String): MutableLiveData<List<Team>> {
-        val data = MutableLiveData<List<Team>>()
-        theSportDbApiService.getTeamListByLeagueId(leagueId)
+    override fun getTeamList(leagueId: String): Single<List<Team>> {
+        return theSportDbApiService.getTeamListByLeagueId(leagueId)
             .subscribeOn(bgScheduler)
             .observeOn(mainScheduler)
-            .doOnSuccess {
-                if (!it.teams.isNullOrEmpty())
-                    data.postValue(it.teams)
+            .map {
+                if (it.body() != null) it.body()!!.teams
+                else emptyList()
             }
-            .doOnError {
-
-            }
-            .subscribe()
-        return data
     }
 
     override fun getFavoriteTeams(db: DatabaseHelper): List<Team> {
@@ -197,52 +203,36 @@ class Repository(
         }
     }
 
-    override fun getPlayerList(teamId: String): MutableLiveData<List<Player>> {
-        val data = MutableLiveData<List<Player>>()
-        theSportDbApiService.getPlayerList(teamId)
+    override fun getPlayerList(teamId: String): Single<List<Player>> {
+        return theSportDbApiService.getPlayerList(teamId)
             .subscribeOn(bgScheduler)
             .observeOn(mainScheduler)
-            .doOnSuccess {
-                if (!it.player.isNullOrEmpty())
-                    data.postValue(it.player)
+            .map {
+                if (it.body() != null) it.body()!!.player
+                else emptyList()
             }
-            .doOnError {
-
-            }
-            .subscribe()
-        return data
     }
 
-    override fun getPlayerDetail(playerId: String): MutableLiveData<Player> {
-        val data = MutableLiveData<Player>()
-        theSportDbApiService.getPlayerDetail(playerId)
+    override fun getPlayerDetail(playerId: String): Single<Player> {
+        return theSportDbApiService.getPlayerDetail(playerId)
             .subscribeOn(bgScheduler)
             .observeOn(mainScheduler)
-            .doOnSuccess {
-                if (!it.players.isNullOrEmpty())
-                    data.postValue(it.players[0])
+            .map {
+                it.body()!!.players[0]
             }
-            .doOnError {
 
-            }
-            .subscribe()
-        return data
     }
 
-    override fun getLeagueStandings(leagueId: String): MutableLiveData<List<Standing>> {
-        val data = MutableLiveData<List<Standing>>()
-        theSportDbApiService.getLeagueStandings(leagueId)
+    override fun getLeagueStandings(leagueId: String): Single<List<Standing>> {
+        return theSportDbApiService.getLeagueStandings(leagueId)
             .subscribeOn(bgScheduler)
             .observeOn(mainScheduler)
-            .doOnSuccess {
-                if (!it.table.isNullOrEmpty())
-                    data.postValue(it.table)
+            .map {
+                if (it.body()?.table != null && !it.body()?.table.isNullOrEmpty())
+                    it.body()!!.table
+                else
+                    emptyList()
             }
-            .doOnError {
-
-            }
-            .subscribe()
-        return data
     }
 
 }

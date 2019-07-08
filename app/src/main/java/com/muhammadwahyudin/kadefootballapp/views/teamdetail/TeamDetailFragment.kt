@@ -48,6 +48,10 @@ class TeamDetailFragment : Fragment() {
             tv_formed_year.text = getString(R.string.year_founded_title) + it.intFormedYear
             tv_team_desc.text = it.strDescriptionEN
             Picasso.get().load(it.strTeamBanner).into(iv_banner)
+
+            Picasso.get().load(it.strStadiumThumb).into(iv_stadium)
+            tv_stadium.text = it.strStadium
+            tv_stadium_loc.text = it.strStadiumLocation
         }
     }
 

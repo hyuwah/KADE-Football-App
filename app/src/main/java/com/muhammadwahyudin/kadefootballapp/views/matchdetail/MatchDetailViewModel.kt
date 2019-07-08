@@ -3,27 +3,42 @@ package com.muhammadwahyudin.kadefootballapp.views.matchdetail
 import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.muhammadwahyudin.kadefootballapp.app.DB_OPS_STATE
 import com.muhammadwahyudin.kadefootballapp.app.toReadableTimeWIB
+import com.muhammadwahyudin.kadefootballapp.base.BaseViewModel
 import com.muhammadwahyudin.kadefootballapp.data.IRepository
 import com.muhammadwahyudin.kadefootballapp.data.local.DatabaseHelper
-import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
-import com.muhammadwahyudin.kadefootballapp.data.model.FavoriteEvent
+import com.muhammadwahyudin.kadefootballapp.data.model.*
+import io.reactivex.rxkotlin.addTo
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 
-class MatchDetailViewModel(private val db: DatabaseHelper, private val repository: IRepository) : ViewModel() {
+class MatchDetailViewModel(private val db: DatabaseHelper, private val repository: IRepository) : BaseViewModel() {
+
+    private var state = MutableLiveData<ResourceState<EventWithImage>>(EmptyState())
 
     private var mEventWithImage = MutableLiveData<EventWithImage>()
     private var isFavorite = MutableLiveData(false)
     private var db_ops_state = MutableLiveData<DB_OPS_STATE>()
 
-    fun loadMatchDetail(id: String): LiveData<EventWithImage> {
-        mEventWithImage = repository.getMatchDetail(id)
-        return mEventWithImage
+    fun loadMatchDetail(id: String): LiveData<ResourceState<EventWithImage>> {
+        state.postValue(LoadingState())
+        repository.getMatchDetail(id)
+            .subscribe(
+                { match ->
+                    if (match != null) {
+                        state.postValue(PopulatedState(match))
+                        mEventWithImage = MutableLiveData(match)
+                    } else state.postValue(NoResultState("No Result for ${id}"))
+                },
+                { t ->
+                    state.postValue(ErrorState(t.localizedMessage))
+                }
+            )
+            .addTo(compDisp)
+        return state
     }
 
     private fun addToFavorite(matchId: String, match: EventWithImage) {

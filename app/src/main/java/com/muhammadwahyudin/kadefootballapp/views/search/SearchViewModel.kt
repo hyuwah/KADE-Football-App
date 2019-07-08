@@ -1,23 +1,22 @@
 package com.muhammadwahyudin.kadefootballapp.views.search
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.muhammadwahyudin.kadefootballapp.base.BaseViewModel
 import com.muhammadwahyudin.kadefootballapp.data.IRepository
 import com.muhammadwahyudin.kadefootballapp.data.model.*
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 
-class SearchViewModel(private val repo: IRepository) : ViewModel() {
+class SearchViewModel(private val repo: IRepository) : BaseViewModel() {
     val matchState = MutableLiveData<ResourceState<List<EventWithImage>>>(EmptyState())
     val teamState = MutableLiveData<ResourceState<List<Team>>>(EmptyState())
-    private val compositeDisposable = CompositeDisposable()
 
     fun searchMatch(query: String) {
         val data = arrayListOf<EventWithImage>()
         matchState.postValue(LoadingState())
-        val disp = repo.searchMatches(query)
+        repo.searchMatches(query)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .filter { t ->
@@ -37,19 +36,22 @@ class SearchViewModel(private val repo: IRepository) : ViewModel() {
                     .doOnError { matchState.postValue(ErrorState(it.localizedMessage)) }
                     .subscribeOn(Schedulers.io())
             }
-            .doOnNext { event ->
-                data.add(event)
-                matchState.postValue(PopulatedState(data.toList()))
-            }
-            .doOnError { matchState.postValue(ErrorState(it.localizedMessage)) }
-            .subscribe()
-        compositeDisposable.add(disp)
+            .subscribe(
+                { event ->
+                    data.add(event)
+                    matchState.postValue(PopulatedState(data.toList()))
+                },
+                {
+                    matchState.postValue(ErrorState(it.localizedMessage))
+                }
+            )
+            .addTo(compDisp)
     }
 
     fun searchTeam(query: String) {
         val data = arrayListOf<Team>()
         teamState.postValue(LoadingState())
-        val disp = repo.searchTeams(query)
+        repo.searchTeams(query)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .filter { t ->
@@ -59,17 +61,15 @@ class SearchViewModel(private val repo: IRepository) : ViewModel() {
             .map { t -> t.teams }
             .flattenAsObservable { t -> t }
             .filter { t -> t.strSport!!.contains("Soccer") }
-            .doOnNext { team ->
-                data.add(team)
-                teamState.postValue(PopulatedState(data.toList()))
-            }
-            .doOnError { teamState.postValue(ErrorState(it.localizedMessage)) }
-            .subscribe()
-        compositeDisposable.add(disp)
+            .subscribe(
+                { team ->
+                    data.add(team)
+                    teamState.postValue(PopulatedState(data.toList()))
+                },
+                {
+                    teamState.postValue(ErrorState(it.localizedMessage))
+                })
+            .addTo(compDisp)
     }
 
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
-    }
 }

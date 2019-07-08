@@ -2,37 +2,44 @@ package com.muhammadwahyudin.kadefootballapp.views.leaguedetail.matchschedule
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import com.muhammadwahyudin.kadefootballapp.base.BaseViewModel
 import com.muhammadwahyudin.kadefootballapp.data.IRepository
 import com.muhammadwahyudin.kadefootballapp.data.model.*
+import io.reactivex.rxkotlin.addTo
 
-class MatchScheduleViewModel(private val repository: IRepository) : ViewModel() {
+class MatchScheduleViewModel(private val repository: IRepository) : BaseViewModel() {
     private val lastEventsState = MutableLiveData<ResourceState<List<EventWithImage>>>(EmptyState())
     private val nextEventsState = MutableLiveData<ResourceState<List<EventWithImage>>>(EmptyState())
 
     fun getLastEventsState(leagueId: String): LiveData<ResourceState<List<EventWithImage>>> {
         lastEventsState.postValue(LoadingState())
-        return Transformations.switchMap(repository.getLastMatchByLeagueId(leagueId)) {
-            if (it.isNullOrEmpty()) {
-                lastEventsState.postValue(NoResultState("No previous match for $leagueId"))
-            } else {
-                lastEventsState.postValue(PopulatedState(it))
-            }
-            lastEventsState
-        }
+        repository.getLastMatchByLeagueId(leagueId)
+            .subscribe(
+                { matches ->
+                    if (!matches.isNullOrEmpty()) lastEventsState.postValue(PopulatedState(matches))
+                    else lastEventsState.postValue(NoResultState("No Previous Match Found"))
+                },
+                {
+                    lastEventsState.postValue(ErrorState(it.localizedMessage))
+                }
+            )
+            .addTo(compDisp)
+        return lastEventsState
     }
 
     fun getNextEventsState(leagueId: String): LiveData<ResourceState<List<EventWithImage>>> {
         nextEventsState.postValue(LoadingState())
-        return Transformations.switchMap(repository.getNextMatchByLeagueId(leagueId)) {
-            if (it.isNullOrEmpty()) {
-                nextEventsState.postValue(NoResultState("No previous match for $leagueId"))
-            } else {
-                nextEventsState.postValue(PopulatedState(it))
-            }
-            nextEventsState
-        }
+        repository.getNextMatchByLeagueId(leagueId)
+            .subscribe(
+                { matches ->
+                    if (!matches.isNullOrEmpty()) nextEventsState.postValue(PopulatedState(matches))
+                    else nextEventsState.postValue(NoResultState("No Next Match Found"))
+                },
+                {
+                    nextEventsState.postValue(ErrorState(it.localizedMessage))
+                })
+            .addTo(compDisp)
+        return nextEventsState
     }
 
 }

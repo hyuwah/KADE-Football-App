@@ -5,5 +5,5 @@ import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
 
 data class EventsRes(
     @SerializedName("events")
-    val events: List<EventWithImage>
+    val events: List<EventWithImage>?
 )

@@ -11,6 +11,8 @@ import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.app.DB_OPS_STATE.*
 import com.muhammadwahyudin.kadefootballapp.app.toReadableTimeWIB
 import com.muhammadwahyudin.kadefootballapp.data.model.EventWithImage
+import com.muhammadwahyudin.kadefootballapp.data.model.LoadingState
+import com.muhammadwahyudin.kadefootballapp.data.model.PopulatedState
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import org.jetbrains.anko.design.snackbar
@@ -55,13 +57,20 @@ class MatchDetailActivity : AppCompatActivity() {
             //fetch match detail from viewmodel
             mViewModel.loadMatchDetail(matchId).observe(
                 this,
-                Observer<EventWithImage> { event ->
-                    event.strAwayTeamBadge = awayBadge
-                    event.strHomeTeamBadge = homeBadge
-                    match = event
-                    setUiContent(match!!)
-                    favoriteBtn?.isVisible = true
-                })
+                Observer { state ->
+                    when (state) {
+                        is LoadingState -> {
+                        }
+                        is PopulatedState -> {
+                            state.data.strAwayTeamBadge = awayBadge
+                            state.data.strHomeTeamBadge = homeBadge
+                            match = state.data
+                            setUiContent(match!!)
+                            favoriteBtn?.isVisible = true
+                        }
+                    }
+                }
+            )
         }
 
     }

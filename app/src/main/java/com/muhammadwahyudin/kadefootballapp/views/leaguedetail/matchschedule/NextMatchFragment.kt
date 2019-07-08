@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.muhammadwahyudin.kadefootballapp.R
 import com.muhammadwahyudin.kadefootballapp.app.invisible
 import com.muhammadwahyudin.kadefootballapp.app.visible
-import com.muhammadwahyudin.kadefootballapp.data.model.EmptyState
-import com.muhammadwahyudin.kadefootballapp.data.model.LoadingState
-import com.muhammadwahyudin.kadefootballapp.data.model.NoResultState
-import com.muhammadwahyudin.kadefootballapp.data.model.PopulatedState
+import com.muhammadwahyudin.kadefootballapp.data.model.*
 import com.muhammadwahyudin.kadefootballapp.views.matchdetail.MatchDetailActivity
 import kotlinx.android.synthetic.main.next_match_fragment.*
 import org.jetbrains.anko.support.v4.intentFor
@@ -85,6 +82,11 @@ class NextMatchFragment : Fragment() {
                     is NoResultState -> {
                         progressbar_next_match.invisible()
                         tv_empty_view.visible()
+                    }
+                    is ErrorState -> {
+                        progressbar_next_match.invisible()
+                        tv_empty_view.visible()
+                        println("ERRORSTATE ${state.message}")
                     }
                 }
             })

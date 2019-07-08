@@ -2,22 +2,27 @@ package com.muhammadwahyudin.kadefootballapp.views.teamdetail.playerlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import com.muhammadwahyudin.kadefootballapp.base.BaseViewModel
 import com.muhammadwahyudin.kadefootballapp.data.IRepository
 import com.muhammadwahyudin.kadefootballapp.data.model.*
+import io.reactivex.rxkotlin.addTo
 
-class PlayerListViewModel(private val repository: IRepository) : ViewModel() {
+class PlayerListViewModel(private val repository: IRepository) : BaseViewModel() {
     private val state = MutableLiveData<ResourceState<List<Player>>>(EmptyState())
 
     fun getPlayerList(teamId: String): LiveData<ResourceState<List<Player>>> {
         state.postValue(LoadingState())
-        return Transformations.switchMap(repository.getPlayerList(teamId)) {
-            if (it.isNullOrEmpty())
-                state.postValue(NoResultState("No player found"))
-            else
-                state.postValue(PopulatedState(it))
-            state
-        }
+        repository.getPlayerList(teamId)
+            .subscribe(
+                { players ->
+                    if (players.isNotEmpty()) state.postValue(PopulatedState(players))
+                    else state.postValue(NoResultState("No Player Found"))
+                },
+                { t ->
+                    state.postValue(ErrorState(t.localizedMessage))
+                }
+            )
+            .addTo(compDisp)
+        return state
     }
 }
